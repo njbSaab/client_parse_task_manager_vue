@@ -20,6 +20,9 @@
 
     <!-- Контент активного таба -->
     <div class="py-5" v-auto-animate>
+      <div v-if="activeTab === 'all'">
+        <slot name="content-all" />
+      </div>
       <div v-if="activeTab === 'search'">
         <slot name="content-search" />
       </div>
@@ -34,8 +37,9 @@
 import { ref } from "vue";
 
 const tabs = ref([
-  { id: "search", label: "Search" },
-  { id: "report", label: "Report" },
+  { id: "all", label: "Всё" },
+  { id: "search", label: "Новый поиск" },
+  { id: "report", label: "Отчёт" },
 ]);
 
 const activeTab = ref("search");

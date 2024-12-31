@@ -1,6 +1,6 @@
 <template>
-<div class="w-full max-w-sm min-w-[200px]">
-  <div class="relative my-[10px]">
+<div class="w-full md:max-w-sm md:min-w-[80%] mx-auto">
+    <div class="relative my-[10px]">
     <textarea
       rows="4"
       placeholder=" "

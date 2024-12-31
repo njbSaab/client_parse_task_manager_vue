@@ -4,13 +4,20 @@ import AccordionSearch from "./components/ui/AccordionSearch.vue";
 import InputSearch from "./components/ui/InputSearch.vue";
 import TextSearch from "./components/ui/TextSearch.vue";
 import SelectSearch from "./components/ui/SelectSearch.vue";
+import CardSearch from "./components/ui/CardSearch.vue";
+import RaportTable from "./components/ui/RaportTable.vue";
 </script>
 
 <template>
   <div class="app-container p-4">
     <h1 class="text-2xl font-bold text-center mb-4">Task Manager</h1>
     <TabsLayout>
-      <!-- Tab 1 -->
+      <template #content-all>
+        <CardSearch/>
+        <CardSearch/>
+        <CardSearch/>
+      </template>
+      <!-- Tab 2 -->
       <template #content-search>
         <AccordionSearch>
           <template #content-1>
@@ -25,11 +32,9 @@ import SelectSearch from "./components/ui/SelectSearch.vue";
         </AccordionSearch>
       </template>
 
-      <!-- Tab 2 -->
+      <!-- Tab 3 -->
       <template #content-report>
-        <div class="p-4 bg-slate-100 rounded-md">
-          Здесь будет отчёт.
-        </div>
+        <RaportTable />
       </template>
     </TabsLayout>
   </div>

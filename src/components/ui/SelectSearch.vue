@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col space-y-4">
+    <div class="flex flex-col space-y-4 w-full md:max-w-sm md:min-w-[80%] mx-auto">
       <!-- Первый список -->
       <span>Выберите сколько раз в (час, день, неделю, месяц) выполнить поиск</span>
       <div class="relative flex flex-col rounded-lg bg-white shadow-sm border border-slate-200" v-auto-animate>
