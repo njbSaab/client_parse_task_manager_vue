@@ -6,11 +6,12 @@
         v-for="tab in tabs"
         :key="tab.id"
         class="z-30 flex-auto text-center"
+        v-auto-animate
       >
         <button
           @click="setActiveTab(tab.id)"
           :class="activeTab === tab.id ? 'text-white bg-gray-800' : 'text-slate-600 bg-inherit'"
-          class="flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-md cursor-pointer font-bold"
+          class="flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-md cursor-pointer font-bold" v-auto-animate
         >
           {{ tab.label }}
         </button>
@@ -18,7 +19,7 @@
     </ul>
 
     <!-- Контент активного таба -->
-    <div class="py-5">
+    <div class="py-5" v-auto-animate>
       <div v-if="activeTab === 'search'">
         <slot name="content-search" />
       </div>

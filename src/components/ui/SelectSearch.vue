@@ -2,7 +2,7 @@
     <div class="flex flex-col space-y-4">
       <!-- Первый список -->
       <span>Выберите сколько раз в (час, день, неделю, месяц) выполнить поиск</span>
-      <div class="relative flex flex-col rounded-lg bg-white shadow-sm border border-slate-200">
+      <div class="relative flex flex-col rounded-lg bg-white shadow-sm border border-slate-200" v-auto-animate>
         <!-- Активный элемент -->
         <div
           v-if="!isFirstDropdownOpen"
@@ -31,7 +31,7 @@
       <span>Выполнить <strong>{{ selectedFirstItem.label }} </strong> поиск(а) в <strong>{{ selectedSecondItem.label }}</strong> </span>
   
       <!-- Второй список -->
-      <div class="relative flex flex-col rounded-lg bg-white shadow-sm border border-slate-200">
+      <div class="relative flex flex-col rounded-lg bg-white shadow-sm border border-slate-200" v-auto-animate>
         <!-- Активный элемент -->
         <div
           v-if="!isSecondDropdownOpen"

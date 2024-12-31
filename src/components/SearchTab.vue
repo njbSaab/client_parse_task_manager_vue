@@ -21,7 +21,7 @@
           class="w-full flex justify-between items-center py-5 text-slate-800"
         >
           <span>{{ item.title }}</span>
-          <span class="text-slate-800 transition-transform duration-300">
+          <span class="text-slate-800 transition-transform duration-300" v-auto-animate>
             <svg
               v-if="!item.isOpen"
               xmlns="http://www.w3.org/2000/svg"
@@ -46,7 +46,7 @@
             </svg>
           </span>
         </button>
-        <div v-if="item.isOpen" class="overflow-hidden transition-all duration-300 ease-in-out">
+        <div v-if="item.isOpen" class="overflow-hidden transition-all duration-300 ease-in-out"  v-auto-animate>
           <slot :name="'content-' + item.id" />
         </div>
       </div>
