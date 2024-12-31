@@ -1,6 +1,6 @@
 <template>
 
-    <div class="card-search cursor-pointer shadow-lg relative flex flex-col bg-white shadow-sm border border-slate-200 rounded-lg w-96 mx-auto my-[20px] overflow-hidden hover:scale-105 transition duration-300 ease">      
+    <div class="card-search cursor-pointer shadow-lg relative flex flex-col bg-white border border-slate-200 rounded-lg mx-auto w-[320px] md:w-[375px] overflow-hidden hover:scale-105 transition duration-300 ease">      
         <div class="mx-3 mb-0 border-b border-slate-200 pt-3 pb-2 px-1">
             <span class="text-sm font-medium text-slate-600">
             Status: <span class="text-green-500">Ok</span>

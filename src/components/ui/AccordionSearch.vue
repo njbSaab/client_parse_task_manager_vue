@@ -32,7 +32,7 @@
   
   const accordionItems = ref([
     { id: 1, title: "Введите сайт", isOpen: false },
-    { id: 2, title: "Введите данные для поиска", isOpen: false },
+    { id: 2, title: "Введите данные поиска", isOpen: false },
     { id: 3, title: "Параметры задачи", isOpen: false },
   ]);
   
