@@ -1,8 +1,8 @@
 <template>
 <div class="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
-  <table class="w-full text-left table-auto min-w-max text-slate-800">
+  <table class="w-full text-left table-auto min-w-max text-slate-800" v-auto-animate>
     <thead>
-      <tr class="text-slate-500 border-b border-slate-300 bg-slate-50">
+      <tr class="text-slate-500 border-b border-slate-300 bg-slate-50" v-auto-animate>
         <th class="p-4">
           <p class="text-sm leading-none font-normal">
              Name Site
@@ -32,8 +32,8 @@
           <p></p>
         </th>
       </tr>
-    </thead>
-    <tbody>
+    </thead >
+    <tbody v-auto-animate>
       <tr class="hover:bg-slate-50">
         <td class="p-4">
           <p class="text-sm font-bold">

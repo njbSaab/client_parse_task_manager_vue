@@ -13,7 +13,7 @@ import RaportTable from "./components/ui/RaportTable.vue";
     <h1 class="text-2xl font-bold text-center mb-4">Task Manager</h1>
     <TabsLayout>
       <template #content-all>
-        <ul class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <ul class="grid grid-cols-1 lg:grid-cols-2 gap-4" v-auto-animate>
           <li>
             <CardSearch/>
           </li>
