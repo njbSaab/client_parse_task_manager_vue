@@ -26,9 +26,9 @@
         </div>
       </div>
     </div>
-  </template>
+</template>
   
-  <script setup>
+<script setup>
   import { ref } from "vue";
   
   const accordionItems = ref([
@@ -38,12 +38,13 @@
   ]);
   
   const toggleAccordion = (id) => {
-    const item = accordionItems.value.find((accordion) => accordion.id === id);
-    if (item) {
-      item.isOpen = !item.isOpen;
-    }
+  accordionItems.value = accordionItems.value.map((item) =>
+    item.id === id
+      ? { ...item, isOpen: !item.isOpen }
+      : { ...item, isOpen: false } // Закрытие всех остальных
+  );
   };
-  </script>
+</script>
   
   <style scoped>
   .form-items:last-child {
