@@ -1,3 +1,4 @@
+// components/ui/SelectSearch.vue
 <template>
   <div class="flex flex-col space-y-4 w-full md:max-w-sm md:min-w-[80%] mx-auto">
     <!-- Первый список -->

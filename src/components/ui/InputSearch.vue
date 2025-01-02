@@ -1,3 +1,4 @@
+//components/ui/InputSearch.vue
 <template>
 <div class="w-full md:max-w-sm md:min-w-[80%] mx-auto">
   <p>Вставьте сайт сюда:</p>

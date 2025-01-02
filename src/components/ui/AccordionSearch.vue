@@ -1,3 +1,4 @@
+// ui/AccordionSearch.vue
 <template>
     <div>
       <div

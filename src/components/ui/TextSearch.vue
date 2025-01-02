@@ -1,8 +1,9 @@
+// components/ui/TextSearch.vue
 <template>
 <div class="w-full md:max-w-sm md:min-w-[80%] mx-auto">
     <div class="relative my-[10px]">
     <textarea
-      rows="4"
+      rows="4" 
       placeholder=" "
       class="peer w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
     ></textarea>
