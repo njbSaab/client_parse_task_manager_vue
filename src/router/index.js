@@ -8,6 +8,11 @@ const routes = [
     name: "alls-task",
     component: () => import("../components/ui/CardSearch.vue"),
   },
+  {
+    path: "/report",
+    name: "report",
+    component: () => import("../components/ui/RaportTable.vue"),
+  },
 ];
 
 const router = createRouter({
