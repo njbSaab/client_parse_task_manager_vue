@@ -9,6 +9,7 @@ export const useFormStore = defineStore("form", {
       interval: "",
       frequency: 1,
       period: "Час",
+      userId: null, // Добавляем userId
     },
     notification: {
       isVisible: false,
@@ -30,19 +31,31 @@ export const useFormStore = defineStore("form", {
     },
     async submitForm() {
       try {
+        // Получаем userId из localStorage
+        const telegramUser = JSON.parse(localStorage.getItem("telegram_user"));
+        if (!telegramUser?.id) {
+          throw new Error("Ошибка: Не удалось получить userId из localStorage");
+        }
+        this.formData.userId = telegramUser.id;
+
+        // Вычисляем интервал
         this.formData.interval = this.calculateInterval();
 
+        // Отправляем запрос на создание задачи
         const response = await createTask(this.formData); // Вызов createTask
         console.log("Задача успешно создана:", response);
 
+        // Отображаем уведомление об успехе
         this.notification.isVisible = true;
         this.notification.type = "success";
       } catch (error) {
         console.error("Ошибка при создании задачи:", error);
 
+        // Отображаем уведомление об ошибке
         this.notification.isVisible = true;
         this.notification.type = "error";
       } finally {
+        // Прячем уведомление через 3 секунды
         setTimeout(() => {
           this.notification.isVisible = false;
         }, 3000);
