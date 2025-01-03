@@ -5,8 +5,13 @@ const telegramUser = ref(null);
 
 onMounted(() => {
   const userData = localStorage.getItem("telegram_user");
+  console.log("Данные из localStorage:", userData);
+
   if (userData) {
     telegramUser.value = JSON.parse(userData);
+    console.log("Загруженные данные пользователя:", telegramUser.value);
+  } else {
+    console.warn("Данные пользователя в localStorage отсутствуют.");
   }
 });
 </script>
