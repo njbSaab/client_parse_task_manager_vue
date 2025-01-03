@@ -36,7 +36,9 @@ export const useFormStore = defineStore("form", {
         if (!telegramUser?.id) {
           throw new Error("Ошибка: Не удалось получить userId из localStorage");
         }
-        this.formData.userId = telegramUser.id;
+
+        // Убедимся, что userId — число
+        this.formData.userId = parseInt(telegramUser.id, 10);
 
         // Вычисляем интервал
         this.formData.interval = this.calculateInterval();
