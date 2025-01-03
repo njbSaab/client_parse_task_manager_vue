@@ -1,53 +1,53 @@
-// main.js
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
-import "./style.css";
-import "@material-tailwind/html/scripts/ripple";
-import { autoAnimatePlugin } from "@formkit/auto-animate/vue";
 import { createPinia } from "pinia";
 
 const pinia = createPinia();
 const app = createApp(App);
 
 app.use(router);
-app.use(autoAnimatePlugin);
 app.use(pinia);
-
-const API_BASE_URL = "http://localhost:3082/api";
-const initData = window.Telegram?.WebApp?.initData || null;
 
 console.log("Telegram API доступен:", window.Telegram);
 console.log("Telegram WebApp доступен:", window.Telegram?.WebApp);
-console.log("initData из Telegram:", initData);
 
-if (initData) {
-  console.log("Отправка initData на сервер:", initData);
-  fetch(`${API_BASE_URL}/users/verify-init-data`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ initData }),
-  })
-    .then((response) => {
-      console.log("Ответ сервера на verify-init-data:", response);
-      return response.json();
+const telegram = window.Telegram?.WebApp;
+
+telegram.onEvent("activated", () => {
+  console.log("Mini App активирован.");
+});
+
+if (telegram) {
+  telegram.ready(); // Сигнализируем Telegram, что Mini App готово
+  console.log("Telegram WebApp инициализировано");
+
+  const initData = telegram.initData;
+  console.log("Получено initData:", initData);
+
+  if (initData) {
+    fetch("http://localhost:3082/api/users/verify-init-data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ initData }),
     })
-    .then((data) => {
-      console.log("Данные от сервера verify-init-data:", data);
-      if (data.success) {
-        console.log(
-          "Авторизация успешна. Сохранение данных пользователя:",
-          data.user
-        );
-        localStorage.setItem("telegram_user", JSON.stringify(data.user));
-      } else {
-        console.error("Ошибка авторизации:", data.error);
-      }
-    })
-    .catch((error) => console.error("Ошибка при авторизации:", error));
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          console.log("Авторизация успешна:", data.user);
+          localStorage.setItem("telegram_user", JSON.stringify(data.user));
+        } else {
+          console.error("Ошибка авторизации:", data.error);
+        }
+      })
+      .catch((error) => console.error("Ошибка при авторизации:", error));
+  } else {
+    console.warn("initData отсутствует.");
+  }
 } else {
-  console.warn("Telegram WebApp не доступен. Приложение открыто вне Telegram.");
+  console.warn("Telegram WebApp не доступен.");
 }
+
 app.mount("#app");
