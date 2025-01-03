@@ -1,20 +1,30 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted } from "vue";
 
-// Получаем токен из localStorage
-const token = ref(localStorage.getItem("user_token"));
+const API_BASE_URL = "http://localhost:3082/api";
+
+onMounted(() => {
+  const token = localStorage.getItem("user_token");
+  if (token) {
+    fetch(`${API_BASE_URL}/users/auth?token=${token}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message === "Авторизация успешна.") {
+          console.log("Пользователь успешно авторизован:", data.user);
+          // Обновите состояние приложения или отобразите информацию о пользователе
+        } else {
+          console.error("Ошибка авторизации:", data.error);
+        }
+      })
+      .catch((error) => console.error("Ошибка при авторизации:", error));
+  }
+});
 </script>
 
 <template>
-  <div class="app-container p-4">
+  <div class="app-container">
     <h1 class="text-2xl font-bold text-center mb-4">Task Manager</h1>
-    <div v-if="token" class="text-center text-green-500">
-      Токен успешно получен: <strong>{{ token }}</strong>
-    </div>
-    <div v-else class="text-center text-red-500">
-      Токен не найден. Пожалуйста, авторизуйтесь.
-    </div>
-    <RouterView /> <!-- Динамический рендеринг страниц -->
+    <RouterView /> <!-- Подключение роутов -->
   </div>
 </template>
 

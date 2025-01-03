@@ -10,23 +10,34 @@ import { createPinia } from "pinia";
 const pinia = createPinia();
 const app = createApp(App);
 
-app.use(router); // Подключение маршрутизации
-app.use(autoAnimatePlugin); // Подключение плагина анимации
-app.use(pinia); // Подключение Pinia
+app.use(router);
+app.use(autoAnimatePlugin);
+app.use(pinia);
+
+const API_BASE_URL = "http://localhost:3082/api";
 
 // Извлечение токена из URL
 const urlParams = new URLSearchParams(window.location.search);
 const token = urlParams.get("token");
 
-console.log("token:", token);
-
 if (token) {
-  localStorage.setItem("user_token", token); // Сохраняем токен в localStorage
+  localStorage.setItem("user_token", token);
 }
 
-// Переадресация на домашнюю страницу, если есть токен
-if (token && window.location.pathname !== "/") {
-  router.replace({ name: "home" });
+// Проверка токена при загрузке приложения
+const storedToken = localStorage.getItem("user_token");
+if (storedToken) {
+  fetch(`${API_BASE_URL}/users/auth?token=${storedToken}`)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.message === "Авторизация успешна.") {
+        console.log("Пользователь успешно авторизован:", data.user);
+        // Сохраните пользователя в глобальном состоянии или в localStorage, если необходимо
+      } else {
+        console.error("Ошибка авторизации:", data.error);
+      }
+    })
+    .catch((error) => console.error("Ошибка при авторизации:", error));
 }
 
 app.mount("#app");
