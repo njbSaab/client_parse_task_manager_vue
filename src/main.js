@@ -15,9 +15,10 @@ app.use(autoAnimatePlugin);
 app.use(pinia);
 
 const API_BASE_URL = "http://localhost:3082/api";
-
 const initData = window.Telegram?.WebApp?.initData || null;
 
+console.log("Telegram API доступен:", window.Telegram);
+console.log("Telegram WebApp доступен:", window.Telegram?.WebApp);
 console.log("initData из Telegram:", initData);
 
 if (initData) {
