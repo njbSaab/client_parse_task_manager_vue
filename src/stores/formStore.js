@@ -31,28 +31,26 @@ export const useFormStore = defineStore("form", {
       try {
         this.formData.interval = this.calculateInterval();
 
-        const response = await fetch("http://localhost:3082/api/tasks/parser", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(this.formData),
-        });
+        const taskData = {
+          url: this.formData.url,
+          content: this.formData.content,
+          interval: this.formData.interval,
+          frequency: this.formData.frequency,
+          period: this.formData.period,
+          userId: 1, // Замените на фактический userId
+        };
 
-        if (!response.ok) {
-          throw new Error("Ошибка при отправке формы");
-        }
+        const response = await createTask(taskData);
 
-        const data = await response.json();
-        console.log("Задача успешно создана:", data);
+        console.log("Задача успешно создана:", response);
 
-        // Устанавливаем уведомление как успешное
+        // Уведомление об успехе
         this.notification.isVisible = true;
         this.notification.type = "success";
       } catch (error) {
         console.error("Ошибка при создании задачи:", error);
 
-        // Устанавливаем уведомление как ошибочное
+        // Уведомление об ошибке
         this.notification.isVisible = true;
         this.notification.type = "error";
       } finally {
