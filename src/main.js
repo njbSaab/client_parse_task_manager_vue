@@ -17,11 +17,10 @@ app.use(pinia);
 const API_BASE_URL = "http://localhost:3082/api";
 
 // Извлечение initData
-const initData = window.Telegram.WebApp.initData || "";
-console.log("Получен initData:", initData);
+const initData = window.Telegram?.WebApp?.initData || null;
 
 if (initData) {
-  // Отправляем initData на сервер для проверки
+  console.log("Получен initData:", initData);
   fetch(`${API_BASE_URL}/users/verify-init-data`, {
     method: "POST",
     headers: {
@@ -33,12 +32,14 @@ if (initData) {
     .then((data) => {
       if (data.success) {
         console.log("Авторизация успешна:", data.user);
-        // Сохраняем информацию о пользователе, если нужно
+        localStorage.setItem("telegram_user", JSON.stringify(data.user));
       } else {
         console.error("Ошибка авторизации:", data.error);
       }
     })
     .catch((error) => console.error("Ошибка при авторизации:", error));
+} else {
+  console.warn("Telegram WebApp не доступен. Приложение открыто вне Telegram.");
 }
 
 app.mount("#app");
