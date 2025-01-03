@@ -5,23 +5,27 @@ const telegramUser = ref(null);
 
 async function saveUserDataToServer(userData) {
   try {
-    const response = await fetch("http://localhost:3082/api/users/save", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
-    const result = await response.json();
-    if (result.success) {
-      console.log("Данные пользователя успешно сохранены:", result);
+    const response = await 
+    fetch("http://localhost:3082/api/users/save", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify(userData),
+})
+  .then((response) => response.json())
+  .then((data) => {
+    if (data.success) {
+      console.log("Пользователь успешно сохранен:", data.user);
     } else {
-      console.error("Ошибка при сохранении данных на сервере:", result.error);
+      console.error("Ошибка при сохранении пользователя:", data.error);
     }
+  })
+  .catch((error) => console.error("Ошибка запроса:", error));
   } catch (error) {
     console.error("Ошибка при отправке данных на сервер:", error);
   }
-}
+} 
 
 onMounted(() => {
   const urlParams = new URLSearchParams(window.location.search);
