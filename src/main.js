@@ -26,18 +26,23 @@ if (token) {
 
 // Проверка токена при загрузке приложения
 const storedToken = localStorage.getItem("user_token");
+console.log("Извлеченный токен из localStorage:", storedToken);
+
 if (storedToken) {
   fetch(`${API_BASE_URL}/users/auth?token=${storedToken}`)
-    .then((response) => response.json())
+    .then((response) => {
+      console.log("Ответ сервера:", response);
+      return response.json();
+    })
     .then((data) => {
+      console.log("Данные сервера:", data);
       if (data.message === "Авторизация успешна.") {
         console.log("Пользователь успешно авторизован:", data.user);
-        // Сохраните пользователя в глобальном состоянии или в localStorage, если необходимо
+        // Дополнительная логика, если нужно
       } else {
         console.error("Ошибка авторизации:", data.error);
       }
     })
     .catch((error) => console.error("Ошибка при авторизации:", error));
 }
-
 app.mount("#app");

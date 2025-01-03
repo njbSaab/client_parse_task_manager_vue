@@ -5,18 +5,23 @@ const API_BASE_URL = "http://localhost:3082/api";
 
 onMounted(() => {
   const token = localStorage.getItem("user_token");
+  console.log("Токен при монтировании:", token);
+  
   if (token) {
     fetch(`${API_BASE_URL}/users/auth?token=${token}`)
-      .then((response) => response.json())
+      .then((response) => {
+        console.log("Ответ от сервера в onMounted:", response);
+        return response.json();
+      })
       .then((data) => {
+        console.log("Данные авторизации в onMounted:", data);
         if (data.message === "Авторизация успешна.") {
           console.log("Пользователь успешно авторизован:", data.user);
-          // Обновите состояние приложения или отобразите информацию о пользователе
         } else {
           console.error("Ошибка авторизации:", data.error);
         }
       })
-      .catch((error) => console.error("Ошибка при авторизации:", error));
+      .catch((error) => console.error("Ошибка при авторизации в onMounted:", error));
   }
 });
 </script>
@@ -24,7 +29,8 @@ onMounted(() => {
 <template>
   <div class="app-container">
     <h1 class="text-2xl font-bold text-center mb-4">Task Manager</h1>
-    <RouterView /> <!-- Подключение роутов -->
+    <p v-if="token">Ваш токен: {{ token }}</p>
+    <RouterView />
   </div>
 </template>
 
