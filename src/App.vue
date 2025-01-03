@@ -5,6 +5,7 @@ import { RouterView } from "vue-router";
 <template>
   <div class="app-container p-4">
     <h1 class="text-2xl font-bold text-center mb-4">Task Manager</h1>
+    
     <RouterView /> <!-- Динамический рендеринг страниц -->
   </div>
 </template>
