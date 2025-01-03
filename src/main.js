@@ -14,10 +14,6 @@ console.log("Telegram WebApp доступен:", window.Telegram?.WebApp);
 
 const telegram = window.Telegram?.WebApp;
 
-telegram.onEvent("activated", () => {
-  console.log("Mini App активирован.");
-});
-
 if (telegram) {
   telegram.ready(); // Сигнализируем Telegram, что Mini App готово
   console.log("Telegram WebApp инициализировано");
