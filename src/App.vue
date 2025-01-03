@@ -4,14 +4,28 @@ import { ref, onMounted } from "vue";
 const telegramUser = ref(null);
 
 onMounted(() => {
-  const userData = localStorage.getItem("telegram_user");
-  console.log("Данные из localStorage:", userData);
+  const urlParams = new URLSearchParams(window.location.search);
+  const tgWebAppData = urlParams.get("tgWebAppData");
 
-  if (userData) {
-    telegramUser.value = JSON.parse(userData);
-    console.log("Загруженные данные пользователя:", telegramUser.value);
+  if (tgWebAppData) {
+    try {
+      const userData = JSON.parse(decodeURIComponent(tgWebAppData));
+      console.log("Данные пользователя из tgWebAppData:", userData);
+
+      // Сохраняем в localStorage
+      localStorage.setItem("telegram_user", JSON.stringify(userData));
+      telegramUser.value = userData;
+    } catch (error) {
+      console.error("Ошибка при парсинге tgWebAppData:", error);
+    }
   } else {
-    console.warn("Данные пользователя в localStorage отсутствуют.");
+    const localData = localStorage.getItem("telegram_user");
+    if (localData) {
+      telegramUser.value = JSON.parse(localData);
+      console.log("Данные из localStorage:", telegramUser.value);
+    } else {
+      console.warn("tgWebAppData отсутствует, и localStorage пустой.");
+    }
   }
 });
 </script>

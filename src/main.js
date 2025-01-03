@@ -2,12 +2,14 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import { createPinia } from "pinia";
+import { autoAnimatePlugin } from "@formkit/auto-animate/vue";
 
 const pinia = createPinia();
 const app = createApp(App);
 
-app.use(router);
-app.use(pinia);
+app.use(router); // Подключение маршрутизации
+app.use(autoAnimatePlugin); // Подключение плагина анимации
+app.use(pinia); // Подключение Pinia
 
 console.log("Telegram API доступен:", window.Telegram);
 console.log("Telegram WebApp доступен:", window.Telegram?.WebApp);
@@ -22,28 +24,10 @@ if (telegram) {
   console.log("Получено initData:", initData);
 
   if (initData) {
-    fetch("http://localhost:3082/api/users/verify-init-data", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ initData }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          console.log("Авторизация успешна:", data.user);
-          localStorage.setItem("telegram_user", JSON.stringify(data.user));
-        } else {
-          console.error("Ошибка авторизации:", data.error);
-        }
-      })
-      .catch((error) => console.error("Ошибка при авторизации:", error));
-  } else {
-    console.warn("initData отсутствует.");
+    console.warn("Telegram WebApp API initData не требуется в этом варианте.");
   }
 } else {
-  console.warn("Telegram WebApp не доступен.");
+  console.warn("Telegram WebApp API не доступен.");
 }
 
 app.mount("#app");
