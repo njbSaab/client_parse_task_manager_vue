@@ -23,8 +23,6 @@
 <script setup>
 import { ref, watch } from "vue";
 import Dropdown from "./Dropdown.vue";
-import BtnSearch from "./BtnSearch.vue";
-import PopoverIsSuccess from "./PopoverIsSuccess.vue";
 import { useFormStore } from "@/stores/formStore";
 
 const formStore = useFormStore();
@@ -44,11 +42,9 @@ const secondItems = ref([
   { id: 4, label: "Месяц" },
 ]);
 
-// Выбранные элементы
-const selectedFirstItem = ref(firstItems.value[0] || { id: null, label: "" });
-const selectedSecondItem = ref(secondItems.value[0] || { id: null, label: "" });
+const selectedFirstItem = ref(firstItems.value[0]);
+const selectedSecondItem = ref(secondItems.value[0]);
 
-// Интервал
 watch([selectedFirstItem, selectedSecondItem], ([first, second]) => {
   console.log("Dropdown values updated:", { first, second });
 
@@ -59,15 +55,13 @@ watch([selectedFirstItem, selectedSecondItem], ([first, second]) => {
     Месяц: 43200,
   };
 
-  if (!first || !second) {
-    console.log("Dropdown values are not properly set.");
-    return;
-  }
+  if (!first || !second) return;
 
   const totalMinutes = periodMap[second.label];
   const calculatedInterval = Math.round(totalMinutes / parseInt(first.label));
   formStore.formData.interval = `${calculatedInterval}m`;
+  formStore.formData.frequency = parseInt(first.label);
 
-  console.log("Updated interval in formData:", formStore.formData.interval);
+  console.log("Updated formData:", formStore.formData);
 });
 </script>

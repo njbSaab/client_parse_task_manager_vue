@@ -30,6 +30,7 @@ export const useFormStore = defineStore("form", {
     },
     async submitForm() {
       try {
+        console.log("Форма отправляется...");
         const telegramUser = JSON.parse(localStorage.getItem("telegram_user"));
         if (!telegramUser?.id) {
           throw new Error("Ошибка: Не удалось получить userId из localStorage");
