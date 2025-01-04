@@ -1,208 +1,60 @@
 <template>
-<div class="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
-  <table class="w-full text-left table-auto min-w-max text-slate-800" v-auto-animate>
-    <thead>
-      <tr class="text-slate-500 border-b border-slate-300 bg-slate-50" v-auto-animate>
-        <th class="p-4">
-          <p class="text-sm leading-none font-normal">
-             Name Site
-          </p>
-        </th>
-        <th class="p-4">
-          <p class="text-sm leading-none font-normal">
-            Start Date
-          </p>
-        </th>
-        <th class="p-4">
-          <p class="text-sm leading-none font-normal">
-            End Date
-          </p>
-        </th>
-        <th class="p-4">
-          <p class="text-sm leading-none font-normal">
-            Owner
-          </p>
-        </th>
-        <th class="p-4">
-          <p class="text-sm leading-none font-normal">
-            Status
-          </p>
-        </th>
-        <th class="p-4">
-          <p></p>
-        </th>
-      </tr>
-    </thead >
-    <tbody v-auto-animate>
-      <tr class="hover:bg-slate-50">
-        <td class="p-4">
-          <p class="text-sm font-bold">
-            Project Alpha
-          </p>
-        </td>
-        <td class="p-4">
-          <p class="text-sm">
-            01/01/2024
-          </p>
-        </td>
-        <td class="p-4">
-          <p class="text-sm">
-            30/06/2024
-          </p>
-        </td>
-        <td class="p-4">
-          <p class="text-sm">
-            John Michael
-          </p>
-        </td>
-        <td class="p-4">
-          <p class="text-sm color-green">
-            OK
-          </p>
-        </td>
-        <td class="p-4">
-          <a href="#" class="text-sm font-semibold ">
-            Edit
-          </a>
-        </td>
-      </tr>
-      <tr class="hover:bg-slate-50">
-        <td class="p-4">
-          <p class="text-sm font-bold">
-            Beta Campaign
-          </p>
-        </td>
-        <td class="p-4">
-          <p class="text-sm">
-            15/02/2024
-          </p>
-        </td>
-        <td class="p-4">
-          <p class="text-sm">
-            15/08/2024
-          </p>
-        </td>
-        <td class="p-4">
-          <p class="text-sm">
-            Alexa Liras
-          </p>
-        </td>
-        <td class="p-4">
-          <p class="text-sm color-green">
-            OK
-          </p>
-        </td>
-        <td class="p-4">
-          <a href="#" class="text-sm font-semibold ">
-            Edit
-         </a>
-        </td>
-      </tr>
-      <tr class="hover:bg-slate-50">
-        <td class="p-4">
-          <p class="text-sm font-bold">
-            Campaign Delta
-          </p>
-        </td>
-        <td class="p-4">
-          <p class="text-sm">
-            01/03/2024
-          </p>
-        </td>
-        <td class="p-4">
-          <p class="text-sm">
-            01/09/2024
-          </p>
-        </td>
-        <td class="p-4">
-          <p class="text-sm">
-            Laurent Perrier
-          </p>
-        </td>
-        <td class="p-4">
-         <p class="text-sm color-red">
-            False
-          </p>
-        </td>
-        <td class="p-4">
-          <a href="#" class="text-sm font-semibold ">
-            Edit
-          </a>
-        </td>
-      </tr>
-      <tr class="hover:bg-slate-50">
-        <td class="p-4">
-          <p class="text-sm font-bold">
-            Gamma Outreach
-          </p>
-        </td>
-        <td class="p-4">
-          <p class="text-sm">
-            10/04/2024
-          </p>
-        </td>
-        <td class="p-4">
-          <p class="text-sm">
-            10/10/2024
-          </p>
-        </td>
-        <td class="p-4">
-          <p class="text-sm">
-            Michael Levi
-          </p>
-        </td>
-        <td class="p-4">
-        <p class="text-sm color-green">
-            OK
-          </p>
-        </td>
-        <td class="p-4">
-          <a href="#" class="text-sm font-semibold ">
-            Edit
-          </a>
-        </td>
-      </tr>
-      <tr class="hover:bg-slate-50">
-        <td class="p-4">
-          <p class="text-sm font-bold">
-            Omega Strategy
-          </p>
-        </td>
-        <td class="p-4">
-          <p class="text-sm">
-            01/05/2024
-          </p>
-        </td>
-        <td class="p-4">
-          <p class="text-sm">
-            01/11/2024
-          </p>
-        </td>
-        <td class="p-4">
-          <p class="text-sm">
-            Richard Gran
-          </p>
-        </td>
-        <td class="p-4">
-        <p class="text-sm color-red">
-            False
-          </p>
-        </td>
-        <td class="p-4">
-          <a href="#" class="text-sm font-semibold ">
-            Edit
-          </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+  <div>
+    <!-- Отображение состояния загрузки -->
+    <div v-if="formStore.isLoading">Загрузка задач...</div>
+
+    <!-- Отображение ошибки -->
+    <div v-else-if="formStore.error">Ошибка: {{ formStore.error }}</div>
+
+    <!-- Таблица задач -->
+    <table v-else>
+      <thead>
+        <tr>
+          <th>Имя задачи</th>
+          <th>URL</th>
+          <th>Дата создания</th>
+          <th>Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="task in formStore.tasks" :key="task.id">
+          <td>{{ task.name }}</td>
+          <td>{{ task.url }}</td>
+          <td>{{ new Date(task.created_at).toLocaleString() }}</td>
+          <td>
+            <button @click="viewLogs(task.id)">Посмотреть логи</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Логи выбранной задачи -->
+    <div v-if="selectedTaskId && formStore.taskLogs[selectedTaskId]">
+      <h3>Логи задачи {{ selectedTaskId }}</h3>
+      <ul>
+        <li v-for="log in formStore.taskLogs[selectedTaskId]" :key="log.id">
+          <strong>{{ log.status }}</strong> - {{ log.message }}
+          <br />
+          <small>{{ new Date(log.created_at).toLocaleString() }}</small>
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script setup>
+  import { useFormStore } from "@/stores/formStore";
+  import { ref, onMounted } from "vue";
 
+const formStore = useFormStore();
+const selectedTaskId = ref(null);
+
+onMounted(() => {
+  formStore.loadTaskLogs()
+});
+
+const viewLogs = (taskId) => {
+  selectedTaskId.value = taskId;
+  formStore.loadTaskLogs(taskId);
+};
 </script>
-
-<style lang="scss" scoped>
-
-</style>

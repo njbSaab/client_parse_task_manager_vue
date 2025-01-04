@@ -21,3 +21,13 @@ export const fetchTasks = async () => {
     throw error.response?.data || { error: "Неизвестная ошибка" };
   }
 };
+
+export const fetchTaskLogs = async (taskId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/tasks/${taskId}/logs`);
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка при получении логов задачи:", error.message);
+    throw error.response?.data || { error: "Неизвестная ошибка" };
+  }
+};

@@ -12,6 +12,7 @@ export const useFormStore = defineStore("form", {
       userId: null,
     },
     tasks: [], // Список задач
+    taskLogs: {}, // Логи задач
     selectedTask: null, // Выбранная задача
     notification: {
       isVisible: false,
@@ -97,6 +98,18 @@ export const useFormStore = defineStore("form", {
     },
     selectTask(task) {
       this.selectedTask = task;
+    },
+    async loadTaskLogs(taskId) {
+      if (this.taskLogs[taskId]) return; // Избегаем повторных запросов
+      try {
+        const logs = await fetchTaskLogs(taskId);
+        console.log("logs-", logs);
+
+        this.taskLogs[taskId] = logs;
+        console.log("this taskLogs", this.taskLogs);
+      } catch (error) {
+        console.error(`Ошибка при загрузке логов задачи ${taskId}:`, error);
+      }
     },
   },
 });

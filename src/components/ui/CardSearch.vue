@@ -33,7 +33,7 @@
     
     <div class="p-4">
         <h5 class="mb-2 text-slate-800 text-xl font-semibold overflow-hidden">
-            {{ task.name.slice(-8, 25) }}
+            {{ task.name }}
         </h5>
         <p class="text-slate-600 leading-normal font-light">
             {{ task.content }}

@@ -21,9 +21,9 @@
         </div>
       </div>
     </div>
-  </template>
+</template>
   
-  <script setup>
+<script setup>
   import { onMounted } from "vue";
   import { useFormStore } from "@/stores/formStore";
   import TaskCard from "@/components/ui/CardSearch.vue";
@@ -33,4 +33,13 @@
   onMounted(() => {
     formStore.loadTasks(); // Загружаем задачи при монтировании
   });
-  </script>
+</script>
+
+<style scoped>
+.nj-position-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+</style>
