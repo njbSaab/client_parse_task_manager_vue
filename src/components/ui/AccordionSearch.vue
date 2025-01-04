@@ -38,11 +38,12 @@
   ]);
   
   const toggleAccordion = (id) => {
+  console.log("Accordion toggled:", id);
   accordionItems.value = accordionItems.value.map((item) =>
     item.id === id
       ? { ...item, isOpen: !item.isOpen }
-      : { ...item, isOpen: false } // Закрытие всех остальных
-  );
+      : { ...item, isOpen: false }
+    );
   };
 </script>
   

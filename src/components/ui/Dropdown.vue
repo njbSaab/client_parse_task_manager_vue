@@ -42,11 +42,13 @@
   const isDropdownOpen = ref(false);
   
   const toggleDropdown = () => {
-    isDropdownOpen.value = !isDropdownOpen.value;
-  };
-  
-  const selectItem = (item) => {
-    emit("update:modelValue", item);
-    isDropdownOpen.value = false;
-  };
+  console.log("Dropdown toggled:", isDropdownOpen.value ? "Closing" : "Opening");
+  isDropdownOpen.value = !isDropdownOpen.value;
+};
+
+const selectItem = (item) => {
+  console.log("Dropdown item selected:", item);
+  emit("update:modelValue", item);
+  isDropdownOpen.value = false;
+};
   </script>

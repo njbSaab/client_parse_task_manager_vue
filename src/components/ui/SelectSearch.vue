@@ -18,6 +18,10 @@
     <!-- Уведомление -->
     <PopoverIsSuccess />
   </div>
+  <span>
+  Выполнить <strong>{{ selectedFirstItem?.label || "..." }}</strong> поиск(а) в
+    <strong>{{ selectedSecondItem?.label || "..." }}</strong>
+  </span>
 </template>
 
 <script setup>
@@ -50,6 +54,8 @@ const selectedSecondItem = ref(secondItems.value[0] || { id: null, label: "" });
 
 // Интервал
 watch([selectedFirstItem, selectedSecondItem], ([first, second]) => {
+  console.log("Dropdown values updated:", { first, second });
+
   const periodMap = {
     Час: 60,
     День: 1440,
@@ -57,10 +63,15 @@ watch([selectedFirstItem, selectedSecondItem], ([first, second]) => {
     Месяц: 43200,
   };
 
-  if (!first || !second) return;
+  if (!first || !second) {
+    console.log("Dropdown values are not properly set.");
+    return;
+  }
 
   const totalMinutes = periodMap[second.label];
   const calculatedInterval = Math.round(totalMinutes / parseInt(first.label));
   formStore.formData.interval = `${calculatedInterval}m`;
+
+  console.log("Updated interval in formData:", formStore.formData.interval);
 });
 </script>
