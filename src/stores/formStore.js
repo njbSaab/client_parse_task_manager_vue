@@ -31,33 +31,29 @@ export const useFormStore = defineStore("form", {
     },
     async submitForm() {
       try {
-        // Получаем userId из localStorage
         const telegramUser = JSON.parse(localStorage.getItem("telegram_user"));
         if (!telegramUser?.id) {
           throw new Error("Ошибка: Не удалось получить userId из localStorage");
         }
+        console.log("user-", telegramUser);
 
-        // Убедимся, что userId — число
-        this.formData.userId = parseInt(telegramUser.id, 10);
+        this.formData.userId = telegramUser.id;
+        console.log("userID", this.formData.userId);
 
-        // Вычисляем интервал
         this.formData.interval = this.calculateInterval();
+        console.log("userID", this.formData.interval);
 
-        // Отправляем запрос на создание задачи
-        const response = await createTask(this.formData); // Вызов createTask
+        const response = await createTask(this.formData);
         console.log("Задача успешно создана:", response);
 
-        // Отображаем уведомление об успехе
         this.notification.isVisible = true;
         this.notification.type = "success";
       } catch (error) {
         console.error("Ошибка при создании задачи:", error);
 
-        // Отображаем уведомление об ошибке
         this.notification.isVisible = true;
         this.notification.type = "error";
       } finally {
-        // Прячем уведомление через 3 секунды
         setTimeout(() => {
           this.notification.isVisible = false;
         }, 3000);
