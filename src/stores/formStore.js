@@ -9,11 +9,11 @@ export const useFormStore = defineStore("form", {
       interval: "",
       frequency: 1,
       period: "Час",
-      userId: null, // Добавляем userId
+      userId: null,
     },
     notification: {
       isVisible: false,
-      type: "success", // "success" или "error"
+      type: "success",
     },
   }),
   actions: {
@@ -24,19 +24,9 @@ export const useFormStore = defineStore("form", {
         Неделя: 10080,
         Месяц: 43200,
       };
-      console.log(
-        "Calculating interval. Period:",
-        this.formData.period,
-        "Frequency:",
-        this.formData.frequency
-      );
-
       const totalMinutes =
         periodMap[this.formData.period] / this.formData.frequency;
-      const interval = `${Math.round(totalMinutes)}m`;
-
-      console.log("Calculated interval:", interval);
-      return interval;
+      return `${Math.round(totalMinutes)}m`;
     },
     async submitForm() {
       try {
@@ -44,13 +34,16 @@ export const useFormStore = defineStore("form", {
         if (!telegramUser?.id) {
           throw new Error("Ошибка: Не удалось получить userId из localStorage");
         }
-        console.log("Telegram user data:", telegramUser);
 
         this.formData.userId = telegramUser.id;
-        console.log("Form data before submission:", this.formData);
+        this.formData.interval = this.calculateInterval();
 
-        const response = await createTask(this.formData);
-        console.log("Server response:", response);
+        // Преобразуем в чистый объект
+        const cleanFormData = JSON.parse(JSON.stringify(this.formData));
+        console.log("Чистый объект для отправки на сервер:", cleanFormData);
+
+        const response = await createTask(cleanFormData);
+        console.log("Ответ от сервера:", response);
 
         this.notification.isVisible = true;
         this.notification.type = "success";

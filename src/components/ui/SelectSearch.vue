@@ -18,10 +18,6 @@
     <!-- Уведомление -->
     <PopoverIsSuccess />
   </div>
-  <span>
-  Выполнить <strong>{{ selectedFirstItem?.label || "..." }}</strong> поиск(а) в
-    <strong>{{ selectedSecondItem?.label || "..." }}</strong>
-  </span>
 </template>
 
 <script setup>
