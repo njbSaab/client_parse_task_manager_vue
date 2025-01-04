@@ -57,13 +57,20 @@ watch([selectedFirstItem, selectedSecondItem], ([first, second]) => {
     Месяц: 43200,
   };
 
-  if (!first || !second) return;
+  if (!first || !second) {
+    console.log("Dropdown values are not properly set.");
+    return;
+  }
+
+  formStore.formData.period = second.label; // Обновляем period
+  console.log("Updated period in formData:", formStore.formData.period);
 
   const totalMinutes = periodMap[second.label];
   const calculatedInterval = Math.round(totalMinutes / parseInt(first.label));
   formStore.formData.interval = `${calculatedInterval}m`;
-  formStore.formData.frequency = parseInt(first.label);
-
-  console.log("Updated formData:", formStore.formData);
+  
+  console.log("Перед отправкой: formData.period:", this.formData.period);
+  console.log("Чистый объект для отправки на сервер:", cleanFormData);
+  console.log("Updated interval in formData:", formStore.formData.interval);
 });
 </script>
