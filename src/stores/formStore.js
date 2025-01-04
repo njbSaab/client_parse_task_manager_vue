@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { createTask, fetchTasks } from "../services/apiService";
+import { createTask, fetchTasks, fetchTaskLogs } from "../services/apiService";
 
 export const useFormStore = defineStore("form", {
   state: () => ({
@@ -100,13 +100,15 @@ export const useFormStore = defineStore("form", {
       this.selectedTask = task;
     },
     async loadTaskLogs(taskId) {
-      if (this.taskLogs[taskId]) return; // Избегаем повторных запросов
+      if (this.taskLogs[taskId]) {
+        console.log(`Логи для задачи ${taskId} уже загружены.`);
+        return; // Избегаем повторного запроса
+      }
       try {
         const logs = await fetchTaskLogs(taskId);
-        console.log("logs-", logs);
+        console.log(`Загруженные логи для задачи ${taskId}:`, logs);
 
         this.taskLogs[taskId] = logs;
-        console.log("this taskLogs", this.taskLogs);
       } catch (error) {
         console.error(`Ошибка при загрузке логов задачи ${taskId}:`, error);
       }

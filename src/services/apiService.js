@@ -25,6 +25,7 @@ export const fetchTasks = async () => {
 export const fetchTaskLogs = async (taskId) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/tasks/${taskId}/logs`);
+    console.log("fetchTaskLogs", response);
     return response.data;
   } catch (error) {
     console.error("Ошибка при получении логов задачи:", error.message);
