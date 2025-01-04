@@ -13,7 +13,7 @@
     </span>
 
     <!-- Кнопка отправки -->
-    <BtnSearch @click="formStore.submitForm" />
+    <BtnSearch @click="handleSubmit" />
     <!-- Уведомление -->
     <PopoverIsSuccess />
 
@@ -76,4 +76,9 @@ watch([selectedFirstItem, selectedSecondItem], ([first, second]) => {
   formStore.formData.interval = `${calculatedInterval}m`;
   console.log("Updated interval in formData:", formStore.formData.interval);
 });
+
+const handleSubmit = () => {
+  console.log("Кнопка нажата...");
+  formStore.submitForm();
+};
 </script>

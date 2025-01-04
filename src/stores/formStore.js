@@ -15,6 +15,7 @@ export const useFormStore = defineStore("form", {
       isVisible: false,
       type: "success",
     },
+    isSubmitting: false, // Флаг предотвращения повторной отправки
   }),
   actions: {
     calculateInterval() {
@@ -29,9 +30,15 @@ export const useFormStore = defineStore("form", {
       return `${Math.round(totalMinutes)}m`;
     },
     async submitForm() {
+      if (this.isSubmitting) {
+        console.warn("Попытка повторной отправки задачи");
+        return;
+      }
+      this.isSubmitting = true;
       try {
         console.log("Форма отправляется...");
         const telegramUser = JSON.parse(localStorage.getItem("telegram_user"));
+
         if (!telegramUser?.id) {
           throw new Error("Ошибка: Не удалось получить userId из localStorage");
         }
@@ -39,7 +46,6 @@ export const useFormStore = defineStore("form", {
         this.formData.userId = telegramUser.id;
         this.formData.interval = this.calculateInterval();
 
-        // Преобразуем в чистый объект
         const cleanFormData = JSON.parse(JSON.stringify(this.formData));
         console.log("Чистый объект для отправки на сервер:", cleanFormData);
 
@@ -48,23 +54,12 @@ export const useFormStore = defineStore("form", {
 
         this.notification.isVisible = true;
         this.notification.type = "success";
-        console.log(
-          "Перед отправкой: formData.frequency: pinia",
-          formStore.formData.frequency
-        );
-        console.log(
-          "Перед отправкой: formData.period: pinia",
-          formStore.formData.period
-        );
-        console.log(
-          "Перед отправкой: formData.interval: pinia",
-          formStore.formData.interval
-        );
       } catch (error) {
         console.error("Ошибка при создании задачи:", error);
         this.notification.isVisible = true;
         this.notification.type = "error";
       } finally {
+        this.isSubmitting = false;
         setTimeout(() => {
           this.notification.isVisible = false;
         }, 3000);

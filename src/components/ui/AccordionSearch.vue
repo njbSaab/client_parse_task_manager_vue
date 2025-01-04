@@ -46,8 +46,8 @@
   };
 </script>
   
-  <style scoped>
+<style scoped>
   .form-items:last-child {
     border-color: transparent;
   }
-  </style>
+</style>
