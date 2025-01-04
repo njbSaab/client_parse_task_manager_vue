@@ -22,9 +22,12 @@
 <div class="card-search cursor-pointer shadow-lg relative flex flex-col bg-white border border-slate-200 rounded-lg mx-auto w-[98%] md:w-[375px] overflow-hidden hover:scale-105 transition duration-300 ease" v-auto-animate
 @click="$emit('click')"
 >      
-    <div class="mx-3 mb-0 border-b border-slate-200 pt-3 pb-2 px-1">
+    <div class="mx-3 mb-0 border-b border-slate-200 pt-3 pb-2 px-1 flex justify-between items-center">
         <span class="text-sm font-medium text-slate-600">
         Status: <span class="text-green-500">Ok</span>
+        </span>
+        <span class="text-sm font-normal text-slate-500">
+            {{ task.interval }}
         </span>
     </div>
     
@@ -38,7 +41,7 @@
     </div>
     <div class="mx-3 border-t border-slate-200 pb-3 pt-2 px-1 flex justify-between">
         <span class="text-sm text-slate-600 font-medium">
-        {{ task.created_at.slice(0, 5)}}
+        {{ task.created_at.slice(0, 10)}}
         </span>
 
         <a href="#" class="text-slate-800 font-semibold text-sm hover:underline flex items-center">
