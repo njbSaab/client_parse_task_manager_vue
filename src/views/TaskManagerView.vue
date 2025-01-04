@@ -5,10 +5,9 @@ import AccordionSearch from "@/components/ui/AccordionSearch.vue";
 import InputSearch from "@/components/ui/InputSearch.vue";
 import TextSearch from "@/components/ui/TextSearch.vue";
 import SelectSearch from "@/components/ui/SelectSearch.vue";
-import CardSearch from "@/components/ui/CardSearch.vue";
 import RaportTable from "@/components/ui/RaportTable.vue";
+import TaskList from "@/components/layouts/TaskList.vue";
 </script>
-
 <template>
   <TabsLayout>
     <template #content-search>
@@ -26,11 +25,7 @@ import RaportTable from "@/components/ui/RaportTable.vue";
     </template>
 
     <template #content-all>
-      <ul class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <li v-for="i in 5" :key="i">
-          <CardSearch />
-        </li>
-      </ul>
+      <TaskList />
     </template>
 
     <template #content-report>

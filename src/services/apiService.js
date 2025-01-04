@@ -11,3 +11,13 @@ export const createTask = async (taskData) => {
     throw error.response?.data || { error: "Неизвестная ошибка" };
   }
 };
+
+export const fetchTasks = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/tasks`);
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка при получении задач:", error);
+    throw error.response?.data || { error: "Неизвестная ошибка" };
+  }
+};

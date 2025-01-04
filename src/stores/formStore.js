@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { createTask } from "../services/apiService";
+import { createTask, fetchTasks } from "../services/apiService";
 
 export const useFormStore = defineStore("form", {
   state: () => ({
@@ -11,11 +11,15 @@ export const useFormStore = defineStore("form", {
       period: "Час",
       userId: null,
     },
+    tasks: [], // Список задач
+    selectedTask: null, // Выбранная задача
     notification: {
       isVisible: false,
       type: "success",
     },
     isSubmitting: false, // Флаг предотвращения повторной отправки
+    isLoading: false, // Флаг загрузки задач
+    error: null, // Ошибка при загрузке
   }),
   actions: {
     calculateInterval() {
@@ -54,6 +58,9 @@ export const useFormStore = defineStore("form", {
 
         this.notification.isVisible = true;
         this.notification.type = "success";
+
+        // После создания задачи обновляем список задач
+        await this.loadTasks();
       } catch (error) {
         console.error("Ошибка при создании задачи:", error);
         this.notification.isVisible = true;
@@ -64,6 +71,24 @@ export const useFormStore = defineStore("form", {
           this.notification.isVisible = false;
         }, 3000);
       }
+    },
+    async loadTasks() {
+      this.isLoading = true;
+      this.error = null;
+      try {
+        const data = await fetchTasks();
+        this.tasks = data;
+        this.selectedTask = data.length > 0 ? data[0] : null; // Устанавливаем первую задачу
+        console.log("Загруженные задачи:", this.tasks);
+      } catch (error) {
+        this.error = error.message || "Ошибка при загрузке задач";
+        console.error("Ошибка при загрузке задач:", error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    selectTask(task) {
+      this.selectedTask = task;
     },
   },
 });
