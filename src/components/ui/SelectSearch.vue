@@ -62,15 +62,18 @@ watch([selectedFirstItem, selectedSecondItem], ([first, second]) => {
     return;
   }
 
-  formStore.formData.period = second.label; // Обновляем period
+  // Обновляем `formData.frequency`
+  formStore.formData.frequency = parseInt(first.label);
+  console.log("Updated frequency in formData:", formStore.formData.frequency);
+
+  // Обновляем `formData.period`
+  formStore.formData.period = second.label;
   console.log("Updated period in formData:", formStore.formData.period);
 
+  // Вычисляем интервал
   const totalMinutes = periodMap[second.label];
-  const calculatedInterval = Math.round(totalMinutes / parseInt(first.label));
+  const calculatedInterval = Math.round(totalMinutes / formStore.formData.frequency);
   formStore.formData.interval = `${calculatedInterval}m`;
-  
-  console.log("Перед отправкой: formData.period:", this.formData.period);
-  console.log("Чистый объект для отправки на сервер:", cleanFormData);
   console.log("Updated interval in formData:", formStore.formData.interval);
 });
 </script>

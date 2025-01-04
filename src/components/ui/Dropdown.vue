@@ -51,4 +51,5 @@ const selectItem = (item) => {
   emit("update:modelValue", item);
   isDropdownOpen.value = false;
 };
-  </script>
+
+</script>

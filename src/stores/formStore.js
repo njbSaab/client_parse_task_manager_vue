@@ -49,12 +49,16 @@ export const useFormStore = defineStore("form", {
         this.notification.isVisible = true;
         this.notification.type = "success";
         console.log(
-          "Перед отправкой: formData.period PINIA:",
-          this.formData.period
+          "Перед отправкой: formData.frequency: pinia",
+          formStore.formData.frequency
         );
         console.log(
-          "Чистый объект для отправки на сервер PINIA:",
-          cleanFormData
+          "Перед отправкой: formData.period: pinia",
+          formStore.formData.period
+        );
+        console.log(
+          "Перед отправкой: formData.interval: pinia",
+          formStore.formData.interval
         );
       } catch (error) {
         console.error("Ошибка при создании задачи:", error);
