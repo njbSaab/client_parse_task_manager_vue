@@ -14,9 +14,9 @@
 
     <!-- Кнопка отправки -->
     <BtnSearch @click="formStore.submitForm" />
-
     <!-- Уведомление -->
     <PopoverIsSuccess />
+
   </div>
 </template>
 
@@ -24,6 +24,8 @@
 import { ref, watch } from "vue";
 import Dropdown from "./Dropdown.vue";
 import { useFormStore } from "@/stores/formStore";
+import BtnSearch from "./BtnSearch.vue"
+import PopoverIsSuccess from "./PopoverIsSuccess.vue"
 
 const formStore = useFormStore();
 
