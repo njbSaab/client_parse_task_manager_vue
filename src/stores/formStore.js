@@ -29,9 +29,17 @@ export const useFormStore = defineStore("form", {
         Неделя: 10080,
         Месяц: 43200,
       };
+
+      if (!this.formData.frequency || !periodMap[this.formData.period]) {
+        console.error("Неверные данные для расчета интервала:", this.formData);
+        return "0m"; // Возвращаем значение по умолчанию
+      }
+
       const totalMinutes =
         periodMap[this.formData.period] / this.formData.frequency;
-      return `${Math.round(totalMinutes)}m`;
+      const interval = `${Math.round(totalMinutes)}m`;
+      console.log("Рассчитанный интервал:", interval);
+      return interval;
     },
     async submitForm() {
       if (this.isSubmitting) {
