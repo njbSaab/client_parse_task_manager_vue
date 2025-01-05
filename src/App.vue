@@ -64,13 +64,10 @@ onMounted(() => {
 
 <template>
   <div class="app-container">
-    <h1 class="text-2xl font-bold text-center mb-4">Task Manager</h1>
-    <div v-if="telegramUser">
-      <p>Добро пожаловать, {{ telegramUser.first_name }}!</p>
-    </div>
-    <div v-else>
-      <p>Пожалуйста, войдите через Telegram для доступа к приложению.</p>
-    </div>
+    <h1 class="text-2xl font-bold text-center my-4">
+      <span v-if="telegramUser">Добро пожаловать в Task Manager {{ telegramUser.first_name }} </span>
+      <span v-else> Пожалуйста, войдите через Telegram для доступа к приложению.</span> 
+    </h1>
     <RouterView />
   </div>
 </template>

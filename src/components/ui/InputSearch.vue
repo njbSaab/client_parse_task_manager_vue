@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full md:max-w-sm md:min-w-[80%] mx-auto">
+  <div class="w-[95%] md:max-w-sm md:min-w-[80%] mx-auto">
     <p>Вставьте сайт сюда:</p>
     <div class="relative mt-[10px] mb-[20px]">
       <input

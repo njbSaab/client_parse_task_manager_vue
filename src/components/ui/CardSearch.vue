@@ -1,25 +1,5 @@
 <template>
-    <!-- <div
-      class="task-card p-4 border rounded-lg shadow hover:shadow-lg cursor-pointer"
-      :class="{ 'bg-blue-50': isSelected }"
-      @click="$emit('click')"
-    >
-      <h2 class="text-lg font-bold text-gray-800 truncate">{{ task.name }}</h2>
-      <p class="text-sm text-gray-600 mt-2 truncate">{{ task.content }}</p>
-      <div class="text-sm text-gray-500 mt-4">
-        Интервал: <strong>{{ task.interval }}</strong>
-        <br />
-        Период: <strong>{{ task.period }}</strong>
-      </div>
-      <a
-        href="#"
-        class="mt-4 inline-block text-blue-500 hover:underline text-sm"
-      >
-        Подробнее
-      </a>
-    </div> -->
-
-<div class="card-search cursor-pointer shadow-lg relative flex flex-col bg-white border border-slate-200 rounded-lg mx-auto w-[98%] md:w-[375px] overflow-hidden hover:scale-105 transition duration-300 ease" v-auto-animate
+<div class="card-search cursor-pointer shadow-lg relative flex flex-col bg-white border border-slate-200 rounded-lg mx-auto w-[98%] md:w-[375px] overflow-hidden hover:scale-105 transition duration-300 ease"
 @click="$emit('click')"
 >      
     <div class="mx-3 mb-0 border-b border-slate-200 pt-3 pb-2 px-1 flex justify-between items-center">
@@ -31,11 +11,11 @@
         </span>
     </div>
     
-    <div class="p-4">
-        <h5 class="mb-2 text-slate-800 text-xl font-semibold overflow-hidden">
+    <div class="p-4 flex-1">
+        <h5 class="mb-2 text-slate-800 text-lg font-semibold overflow-hidden text-nowrap">
             {{ task.name }}
         </h5>
-        <p class="text-slate-600 leading-normal font-light">
+        <p class="text-slate-600 leading-normal font-light text-sm">
             {{ task.content }}
         </p>
     </div>

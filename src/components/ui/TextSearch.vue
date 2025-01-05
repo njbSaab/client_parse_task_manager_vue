@@ -1,6 +1,6 @@
 // components/ui/TextSearch.vue
 <template>
-  <div class="w-full md:max-w-sm md:min-w-[80%] mx-auto">
+  <div class="w-[95%] md:max-w-sm md:min-w-[80%] mx-auto">
     <div class="relative my-[10px]">
       <textarea
         rows="4"

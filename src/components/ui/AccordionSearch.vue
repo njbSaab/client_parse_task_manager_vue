@@ -5,7 +5,6 @@
         v-for="item in accordionItems"
         :key="item.id"
         class="form-items border-b border-slate-200"
-        v-auto-animate
       >
         <button
           @click="toggleAccordion(item.id)"
@@ -21,7 +20,7 @@
 
           </span>
         </button>
-        <div v-if="item.isOpen" class="overflow-hidden transition-all duration-300 ease-in-out" v-auto-animate>
+        <div v-if="item.isOpen" class="overflow-hidden transition-all duration-300 ease-in-out">
           <slot :name="'content-' + item.id" />
         </div>
       </div>
