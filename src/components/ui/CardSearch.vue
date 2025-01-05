@@ -1,5 +1,5 @@
 <template>
-<div class="card-search cursor-pointer shadow-lg relative flex flex-col bg-white border border-slate-200 rounded-lg mx-auto w-[98%] md:w-[375px] overflow-hidden hover:scale-105 transition duration-300 ease"
+<div class="card-search cursor-pointer shadow-lg relative flex flex-col bg-white border border-slate-200 rounded-lg mx-auto w-[98%] md:w-[375px] overflow-hidden hover:scale-105 hover:shadow-xl transition duration-300 ease"
 @click="$emit('click')"
 v-auto-animate
 >      

@@ -22,7 +22,6 @@ const setActiveTab = (id) => {
         v-for="tab in tabs"
         :key="tab.id"
         class="z-30 flex-auto text-center"
-        v-auto-animate
       >
         <button
           @click="setActiveTab(tab.id)"
