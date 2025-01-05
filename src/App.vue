@@ -65,7 +65,11 @@ onMounted(() => {
 <template>
   <div class="app-container" v-auto-animate>
     <h1 class="text-xl font-bold text-center my-4">
-      <span v-if="telegramUser"> <span class="font-normal">👋 Добро пожаловать в</span>Task Manager {{ telegramUser.first_name }} 🚀</span>
+      <span v-if="telegramUser">
+         <span class="text-lg font-normal">👋 Добро пожаловать в </span>
+         Task Manager
+       <span class="block">  {{ telegramUser.first_name }} 🚀 </span>
+      </span>
       <span v-else> Пожалуйста, войдите через Telegram для доступа к приложению.</span> 
     </h1>
     <RouterView />
