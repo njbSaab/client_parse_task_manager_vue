@@ -22,18 +22,18 @@ const setActiveTab = (id) => {
         v-for="tab in tabs"
         :key="tab.id"
         class="z-30 flex-auto text-center"
+        v-auto-animate
       >
         <button
           @click="setActiveTab(tab.id)"
           :class="activeTab === tab.id ? 'text-white bg-gray-800' : 'text-slate-600 bg-inherit'"
-          class="w-full px-0 py-2 text-sm mb-0 border-0 rounded-md font-bold"
-        >
+          class="w-full px-0 py-2 text-sm mb-0 border-0 rounded-md font-bold">
           {{ tab.label }}
         </button>
       </li>
     </ul>
 
-    <div class="py-5">
+    <div class="py-5" v-auto-animate>
       <slot name="content-all" v-if="activeTab === 'all'" />
       <slot name="content-search" v-if="activeTab === 'search'" />
       <slot name="content-report" v-if="activeTab === 'report'" />

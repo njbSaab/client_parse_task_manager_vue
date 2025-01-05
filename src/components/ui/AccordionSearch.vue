@@ -5,6 +5,7 @@
         v-for="item in accordionItems"
         :key="item.id"
         class="form-items border-b border-slate-200"
+        v-auto-animate
       >
         <button
           @click="toggleAccordion(item.id)"

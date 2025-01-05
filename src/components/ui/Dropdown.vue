@@ -1,6 +1,9 @@
 <template>
-    <div v-if="items && items.length > 0" class="relative flex flex-col rounded-lg bg-white shadow-sm border border-slate-200">
+   <div v-if="items && items.length > 0"
+       class="relative flex flex-col rounded-lg bg-white shadow-sm border border-slate-200" v-auto-animate
+       >
       <div
+        
         v-if="!isDropdownOpen"
         role="button"
         @click="toggleDropdown"
@@ -8,7 +11,9 @@
       >
         {{ modelValue?.label || "Выберите" }}
       </div>
-      <nav v-else class="flex min-w-[240px] flex-col gap-1 p-1.5">
+      <nav v-else class="flex min-w-[240px] flex-col gap-1 p-1.5" 
+      v-auto-animate
+      >
         <div
           v-for="item in items"
           :key="item.id"

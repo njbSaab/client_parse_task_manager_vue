@@ -63,8 +63,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="app-container">
-    <h1 class="text-2xl font-bold text-center my-4">
+  <div class="app-container" v-auto-animate>
+    <h1 class="text-xl font-bold text-center my-4">
       <span v-if="telegramUser">Добро пожаловать в Task Manager {{ telegramUser.first_name }} </span>
       <span v-else> Пожалуйста, войдите через Telegram для доступа к приложению.</span> 
     </h1>

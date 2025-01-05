@@ -1,6 +1,7 @@
 <template>
 <div class="card-search cursor-pointer shadow-lg relative flex flex-col bg-white border border-slate-200 rounded-lg mx-auto w-[98%] md:w-[375px] overflow-hidden hover:scale-105 transition duration-300 ease"
 @click="$emit('click')"
+v-auto-animate
 >      
     <div class="mx-3 mb-0 border-b border-slate-200 pt-3 pb-2 px-1 flex justify-between items-center">
         <span class="text-sm font-medium text-slate-600">

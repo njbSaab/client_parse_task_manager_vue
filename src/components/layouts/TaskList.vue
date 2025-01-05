@@ -1,5 +1,5 @@
 <template>
-    <div class="relative">
+    <div class="relative w-[95%] mx-auto" v-auto-animate>
       <h1 class="text-xl font-bold">Список задач</h1>
       <IsLoading v-if="formStore.isLoading"/>
       <div v-else-if="formStore.error" class="text-red-500">{{ formStore.error }}</div>
