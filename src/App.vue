@@ -9,12 +9,12 @@ const telegramIdType = ref(""); // Тип данных telegramId
 const telegramIdValue = ref(""); // Значение telegramId
 const serverRequestDetails = ref(null); // Детали запроса
 const isLoading = ref(true); // Флаг загрузки данных
+const isStoredInLocalStorage = ref(false); // Флаг успешной записи в localStorage
 
 async function fetchUserFromServer(telegramId) {
   telegramIdType.value = typeof telegramId;
   telegramIdValue.value = String(telegramId); // Преобразуем в строку
-  console.log('start',telegramIdValue.value);
-  
+
   const requestUrl = `https://095d-176-37-193-72.ngrok-free.app/api/users/${telegramIdValue.value}`;
   serverRequestDetails.value = { url: requestUrl, telegramId: telegramIdValue.value };
   isLoading.value = true;
@@ -28,33 +28,30 @@ async function fetchUserFromServer(telegramId) {
       },
     });
 
-    // Логируем ответ для отладки
-    console.log(`HTTP ${response.status}: ${response.statusText}`);
-
     serverResponse.value = {
       status: response.status,
       statusText: response.statusText,
       requestUrl,
     };
 
-    // Проверяем статус ответа
     if (!response.ok) {
       throw new Error(`HTTP ошибка: ${response.status} ${response.statusText}`);
     }
 
-    // Проверяем тип контента
     const contentType = response.headers.get("content-type");
     if (!contentType || !contentType.includes("application/json")) {
       throw new Error("Ответ сервера не является JSON");
     }
 
-    // Парсим ответ
     const data = await response.json();
     serverResponse.value.data = data;
 
-    // Проверяем успешность ответа
     if (data.success) {
-      telegramUser.value = data.user; // Сохраняем данные пользователя
+      telegramUser.value = data.user;
+
+      // Записываем данные в localStorage
+      localStorage.setItem("telegram_user", JSON.stringify(data.user));
+      isStoredInLocalStorage.value = true; // Флаг успешной записи
     } else {
       userNotFound.value = true;
       errorDetails.value = {
@@ -63,7 +60,6 @@ async function fetchUserFromServer(telegramId) {
       };
     }
   } catch (error) {
-    // Обрабатываем ошибки
     userNotFound.value = true;
     errorDetails.value = {
       message: "Ошибка при запросе к серверу",
@@ -71,17 +67,15 @@ async function fetchUserFromServer(telegramId) {
       telegramId: telegramIdValue.value,
       requestUrl,
     };
-    console.error("Ошибка запроса:", error);
   } finally {
-    // Убираем состояние загрузки
     isLoading.value = false;
   }
 }
+
 onMounted(() => {
   const urlParams = new URLSearchParams(window.location.search);
   const tgWebAppData = urlParams.get("tgWebAppData");
-  console.log('onMounted',telegramIdValue.value);
-  
+
   if (tgWebAppData) {
     try {
       const userData = JSON.parse(decodeURIComponent(tgWebAppData));
@@ -89,8 +83,8 @@ onMounted(() => {
         throw new Error("Telegram ID отсутствует в данных");
       }
 
-      serverResponse.value = { telegramData: userData }; // Данные Telegram
-      fetchUserFromServer(userData.id); // Проверяем пользователя на сервере
+      serverResponse.value = { telegramData: userData };
+      fetchUserFromServer(userData.id);
     } catch (error) {
       userNotFound.value = true;
       errorDetails.value = {
@@ -116,13 +110,19 @@ onMounted(() => {
         Task Manager
         <span class="block"> {{ telegramUser.first_name }} 🚀 </span>
       </span>
-      
-      <!-- Сообщение, если пользователь не найден -->
       <span v-else>
         Пожалуйста, войдите через Telegram для доступа к приложению.
       </span>
     </h1>
-    
+
+    <!-- Проверка записи в localStorage -->
+    <div v-if="isStoredInLocalStorage" class="text-green-500 text-center">
+      Данные успешно записаны в localStorage! 🚀
+    </div>
+    <div v-else-if="!isLoading && telegramUser" class="text-red-500 text-center">
+      Не удалось записать данные в localStorage.
+    </div>
+
     <!-- Вывод контента на основе роутов -->
     <RouterView />
   </div>

@@ -14,20 +14,36 @@
 
     <!-- Кнопка отправки -->
     <BtnSearch @click="handleSubmit" />
+
     <!-- Уведомление -->
     <PopoverIsSuccess />
 
+    <!-- Логи запросов -->
+    <div v-if="logs.length" class="mt-4 p-4 border rounded bg-gray-100">
+      <h2 class="font-bold text-lg">Логи запросов</h2>
+      <ul class="text-sm">
+        <li v-for="(log, index) in logs" :key="index">
+          <span class="font-bold">Запрос:</span> {{ log.request }} <br />
+          <span class="font-bold">Ответ:</span> {{ log.response }} <br />
+          <span class="font-bold">Время:</span> {{ log.time }}
+        </li>
+      </ul>
+    </div>
+    <div v-else class="mt-4 text-gray-500">
+      Логи запросов отсутствуют.
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import Dropdown from "./Dropdown.vue";
 import { useFormStore } from "@/stores/formStore";
-import BtnSearch from "./BtnSearch.vue"
-import PopoverIsSuccess from "./PopoverIsSuccess.vue"
+import BtnSearch from "./BtnSearch.vue";
+import PopoverIsSuccess from "./PopoverIsSuccess.vue";
 
 const formStore = useFormStore();
+const logs = ref([]); // Массив для хранения логов
 
 // Данные для выпадающих списков
 const firstItems = ref([
@@ -48,8 +64,6 @@ const selectedFirstItem = ref(firstItems.value[0]);
 const selectedSecondItem = ref(secondItems.value[0]);
 
 watch([selectedFirstItem, selectedSecondItem], ([first, second]) => {
-  console.log("Dropdown values updated:", { first, second });
-
   const periodMap = {
     Час: 60,
     День: 1440,
@@ -57,28 +71,36 @@ watch([selectedFirstItem, selectedSecondItem], ([first, second]) => {
     Месяц: 43200,
   };
 
-  if (!first || !second) {
-    console.log("Dropdown values are not properly set.");
-    return;
-  }
+  if (!first || !second) return;
 
-  // Обновляем `formData.frequency`
   formStore.formData.frequency = parseInt(first.label);
-  console.log("Updated frequency in formData:", formStore.formData.frequency);
-
-  // Обновляем `formData.period`
   formStore.formData.period = second.label;
-  console.log("Updated period in formData:", formStore.formData.period);
 
-  // Вычисляем интервал
   const totalMinutes = periodMap[second.label];
   const calculatedInterval = Math.round(totalMinutes / formStore.formData.frequency);
   formStore.formData.interval = `${calculatedInterval}m`;
-  console.log("Updated interval in formData:", formStore.formData.interval);
 });
 
-const handleSubmit = () => {
-  console.log("Кнопка нажата...");
-  formStore.submitForm();
+const handleSubmit = async () => {
+  try {
+    console.log("Кнопка нажата...");
+    await formStore.submitForm();
+
+    // Добавляем успешный лог
+    logs.value.push({
+      request: JSON.stringify(formStore.formData),
+      response: "Задача успешно создана",
+      time: new Date().toLocaleTimeString(),
+    });
+  } catch (error) {
+    console.error("Ошибка при создании задачи:", error);
+
+    // Добавляем лог ошибки
+    logs.value.push({
+      request: JSON.stringify(formStore.formData),
+      response: error.message || "Неизвестная ошибка",
+      time: new Date().toLocaleTimeString(),
+    });
+  }
 };
 </script>
