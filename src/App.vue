@@ -7,27 +7,43 @@ const userNotFound = ref(false); // Флаг "пользователь не на
 const errorDetails = ref(null); // Детали ошибки
 const telegramIdType = ref(""); // Тип данных telegramId
 const telegramIdValue = ref(""); // Значение telegramId
-const serverRequestDetails = ref({}); // Детали запроса
+const serverRequestDetails = ref(null); // Детали запроса
+const isLoading = ref(true); // Флаг загрузки данных
 
 async function fetchUserFromServer(telegramId) {
   telegramIdType.value = typeof telegramId; // Определяем тип данных
   telegramIdValue.value = String(telegramId); // Преобразуем в строку
-  const requestUrl = `http://localhost:3082/api/users/${telegramIdValue.value}`;
+  const requestUrl = `https://095d-176-37-193-72.ngrok-free.app/api/users/${telegramIdValue.value}`;
+  serverRequestDetails.value = {
+    url: requestUrl,
+    telegramId: telegramIdValue.value,
+  };
+
+  isLoading.value = true; // Устанавливаем состояние загрузки
 
   try {
     const response = await fetch(requestUrl, { method: "GET" });
 
+    // Сохраняем детали ответа
     serverResponse.value = {
       status: response.status,
       statusText: response.statusText,
       requestUrl,
     };
 
+    // Проверка статуса ответа
+    if (!response.ok) {
+      throw new Error(
+        `HTTP ошибка: ${response.status} ${response.statusText}`
+      );
+    }
+
     const data = await response.json();
     serverResponse.value.data = data;
 
+    // Проверяем, успешен ли запрос
     if (data.success) {
-      telegramUser.value = data.user;
+      telegramUser.value = data.user; // Пользователь найден
     } else {
       userNotFound.value = true;
       errorDetails.value = {
@@ -36,6 +52,7 @@ async function fetchUserFromServer(telegramId) {
       };
     }
   } catch (error) {
+    // Обработка ошибок запроса
     userNotFound.value = true;
     errorDetails.value = {
       message: "Ошибка при запросе к серверу",
@@ -43,15 +60,15 @@ async function fetchUserFromServer(telegramId) {
       telegramId: telegramIdValue.value,
       requestUrl,
     };
+  } finally {
+    isLoading.value = false; // Снимаем состояние загрузки
   }
 }
-// Обработка при монтировании компонента
+
 onMounted(() => {
   const urlParams = new URLSearchParams(window.location.search);
   const tgWebAppData = urlParams.get("tgWebAppData");
-  console.log(telegramIdType);
-  console.log(telegramIdValue);
-  
+
   if (tgWebAppData) {
     try {
       const userData = JSON.parse(decodeURIComponent(tgWebAppData));
@@ -63,54 +80,54 @@ onMounted(() => {
         message: "Ошибка при парсинге tgWebAppData",
         details: error.message,
       };
+      isLoading.value = false;
     }
   } else {
     userNotFound.value = true;
     errorDetails.value = { message: "tgWebAppData отсутствует в URL" };
+    isLoading.value = false;
   }
 });
-</script><template>
+</script>
+
+<template>
   <div class="app-container">
+    <!-- Если данные загружаются -->
+    <span v-if="isLoading" class="text-blue-500">
+      Загрузка данных...
+    </span>
+
     <!-- Если пользователь найден -->
-    <h1 class="text-xl font-bold text-center my-4">
-      <span v-if="telegramUser">
-        <span class="text-lg font-normal">👋 Добро пожаловать в </span>
-        Task Manager
-        <span class="block"> {{ telegramUser.first_name }} 🚀 </span>
-      </span>
-
-      <!-- Если пользователь не найден -->
-      <span v-else-if="userNotFound" class="text-red-500">
-        <p><strong>Пользователь не найден</strong></p>
-        <p v-if="errorDetails">Ошибка: {{ errorDetails.message }}</p>
-        <p v-if="errorDetails?.details">Детали: {{ errorDetails.details }}</p>
-        <p v-if="errorDetails?.telegramId">Telegram ID: {{ errorDetails.telegramId }}</p>
-        <p v-if="errorDetails">Детали: {{ errorDetails }}</p>
-        <span v-if="errorDetails"> {{ telegramUser }} 🚀 </span>
-
-      </span>
-
-      <!-- Если данные загружаются -->
-      <span v-else>
-        Загрузка данных...
-      </span>
+    <h1 v-else-if="telegramUser" class="text-xl font-bold text-center my-4">
+      <span class="text-lg font-normal">👋 Добро пожаловать в </span>
+      Task Manager
+      <span class="block"> {{ telegramUser.first_name }} 🚀 </span>
     </h1>
 
-    <!-- Отображение данных ответа сервера -->
-     <div v-if="serverResponse" class="mt-8 p-4 border rounded bg-gray-50">
-        <h2 class="font-bold text-lg">Данные сервера</h2>
-        <p><strong>HTTP Статус:</strong> {{ serverResponse.status }} - {{ serverResponse.statusText }}</p>
-        <p><strong>Запрос:</strong> {{ serverResponse.requestUrl }}</p>
-        <pre class="text-sm bg-gray-100 p-2 rounded overflow-auto">
-          {{ serverResponse.data }}
-        </pre>
-      </div>
+    <!-- Если пользователь не найден -->
+    <div v-else class="text-red-500">
+      <p><strong>Пользователь не найден</strong></p>
+      <p v-if="errorDetails">Ошибка: {{ errorDetails.message }}</p>
+      <p v-if="errorDetails?.details">Детали: {{ errorDetails.details }}</p>
+      <p v-if="errorDetails?.telegramId">Telegram ID: {{ errorDetails.telegramId }}</p>
+    </div>
 
-      <div v-if="serverRequestDetails" class="mt-4 p-4 border rounded bg-gray-50">
-        <h2 class="font-bold text-lg">Детали запроса</h2>
-        <p><strong>URL:</strong> {{ serverRequestDetails.url }}</p>
-        <p><strong>Telegram ID:</strong> {{ serverRequestDetails.telegramId }}</p>
-      </div>
+    <!-- Отображение данных ответа сервера -->
+    <div v-if="serverResponse" class="mt-8 p-4 border rounded bg-gray-50">
+      <h2 class="font-bold text-lg">Данные сервера</h2>
+      <p><strong>HTTP Статус:</strong> {{ serverResponse.status }} - {{ serverResponse.statusText }}</p>
+      <p><strong>Запрос:</strong> {{ serverResponse.requestUrl }}</p>
+      <pre class="text-sm bg-gray-100 p-2 rounded overflow-auto">
+        {{ serverResponse.data }}
+      </pre>
+    </div>
+
+    <!-- Отображение деталей запроса -->
+    <div v-if="serverRequestDetails" class="mt-4 p-4 border rounded bg-gray-50">
+      <h2 class="font-bold text-lg">Детали запроса</h2>
+      <p><strong>URL:</strong> {{ serverRequestDetails.url }}</p>
+      <p><strong>Telegram ID:</strong> {{ serverRequestDetails.telegramId }}</p>
+    </div>
 
     <!-- Отображение типа и значения telegramId -->
     <div class="mt-4 p-4 border rounded bg-gray-50">
@@ -118,7 +135,6 @@ onMounted(() => {
       <p><strong>Тип данных:</strong> {{ telegramIdType }}</p>
       <p><strong>Значение:</strong> "{{ telegramIdValue }}"</p>
     </div>
-    <RouterView v-if="telegramUser" />
   </div>
 </template>
 
