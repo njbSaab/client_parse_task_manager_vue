@@ -5,18 +5,30 @@ const telegramUser = ref(null); // Данные пользователя
 const serverResponse = ref(null); // Ответ от сервера
 const userNotFound = ref(false); // Флаг "пользователь не найден"
 const errorDetails = ref(null); // Детали ошибки
+const telegramIdType = ref(""); // Тип данных telegramId
+const telegramIdValue = ref(""); // Значение telegramId
 
 // Функция для проверки пользователя на сервере
 async function fetchUserFromServer(telegramId) {
+  telegramIdType.value = typeof telegramId; // Определяем тип данных
+  telegramIdValue.value = telegramId; // Сохраняем значение
+
   try {
     const response = await fetch(`http://localhost:3082/api/users/${telegramId}`, {
       method: "GET",
     });
+
+    // Сохраняем статус ответа
+    serverResponse.value = {
+      status: response.status,
+      statusText: response.statusText,
+    };
+
     const data = await response.json();
-    serverResponse.value = data; // Сохраняем ответ сервера для отображения
+    serverResponse.value.data = data;
 
     if (data.success) {
-      telegramUser.value = data.user; // Пользователь найден
+      telegramUser.value = data.user;
     } else {
       userNotFound.value = true;
       errorDetails.value = {
@@ -56,9 +68,7 @@ onMounted(() => {
     errorDetails.value = { message: "tgWebAppData отсутствует в URL" };
   }
 });
-</script>
-
-<template>
+</script><template>
   <div class="app-container">
     <!-- Если пользователь найден -->
     <h1 class="text-xl font-bold text-center my-4">
@@ -85,9 +95,17 @@ onMounted(() => {
     <!-- Отображение данных ответа сервера -->
     <div v-if="serverResponse" class="mt-8 p-4 border rounded bg-gray-50">
       <h2 class="font-bold text-lg">Данные сервера</h2>
+      <p><strong>HTTP Статус:</strong> {{ serverResponse.status }} - {{ serverResponse.statusText }}</p>
       <pre class="text-sm bg-gray-100 p-2 rounded overflow-auto">
-        {{ serverResponse }}
+        {{ serverResponse.data }}
       </pre>
+    </div>
+
+    <!-- Отображение типа и значения telegramId -->
+    <div class="mt-4 p-4 border rounded bg-gray-50">
+      <h2 class="font-bold text-lg">Детали Telegram ID</h2>
+      <p><strong>Тип данных:</strong> {{ telegramIdType }}</p>
+      <p><strong>Значение:</strong> {{ telegramIdValue }}</p>
     </div>
 
     <RouterView v-if="telegramUser" />
