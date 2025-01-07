@@ -32,11 +32,19 @@
     <div v-else class="mt-4 text-gray-500">
       Логи запросов отсутствуют.
     </div>
+
+    <!-- Отображение данных из localStorage -->
+    <div class="mt-4 p-4 border rounded bg-gray-100">
+      <h2 class="font-bold text-lg">Данные из localStorage</h2>
+      <pre class="text-sm bg-gray-200 p-2 rounded">
+        {{ telegramUserFromStorage }}
+      </pre>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
+import { ref, watch, onMounted } from "vue";
 import Dropdown from "./Dropdown.vue";
 import { useFormStore } from "@/stores/formStore";
 import BtnSearch from "./BtnSearch.vue";
@@ -44,6 +52,7 @@ import PopoverIsSuccess from "./PopoverIsSuccess.vue";
 
 const formStore = useFormStore();
 const logs = ref([]); // Массив для хранения логов
+const telegramUserFromStorage = ref(null); // Telegram данные из localStorage
 
 // Данные для выпадающих списков
 const firstItems = ref([
@@ -63,6 +72,7 @@ const secondItems = ref([
 const selectedFirstItem = ref(firstItems.value[0]);
 const selectedSecondItem = ref(secondItems.value[0]);
 
+// Слушаем изменения в выпадающих списках
 watch([selectedFirstItem, selectedSecondItem], ([first, second]) => {
   const periodMap = {
     Час: 60,
@@ -103,4 +113,19 @@ const handleSubmit = async () => {
     });
   }
 };
+
+// Загружаем данные из localStorage при монтировании компонента
+onMounted(() => {
+  try {
+    const storedUser = localStorage.getItem("telegram_user");
+    if (storedUser) {
+      telegramUserFromStorage.value = JSON.parse(storedUser);
+      console.log("Данные из localStorage:", telegramUserFromStorage.value);
+    } else {
+      console.warn("Нет данных в localStorage по ключу 'telegram_user'.");
+    }
+  } catch (error) {
+    console.error("Ошибка при чтении из localStorage:", error);
+  }
+});
 </script>
