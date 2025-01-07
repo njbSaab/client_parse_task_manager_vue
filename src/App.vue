@@ -12,13 +12,19 @@ const isLoading = ref(true); // Флаг загрузки данных
 
 async function fetchUserFromServer(telegramId) {
   telegramIdType.value = typeof telegramId;
-  telegramIdValue.value = `${telegramId}`;
+  telegramIdValue.value = String(telegramId); // Преобразуем в строку
   const requestUrl = `https://095d-176-37-193-72.ngrok-free.app/api/users/${telegramIdValue.value}`;
   serverRequestDetails.value = { url: requestUrl, telegramId: telegramIdValue.value };
   isLoading.value = true;
 
   try {
-    const response = await fetch(requestUrl, { method: "GET" });
+    const response = await fetch(requestUrl, {
+      method: "GET",
+      headers: {
+        "Accept": "application/json",
+        "ngrok-skip-browser-warning": "true", // Устранение предупреждения ngrok
+      },
+    });
 
     serverResponse.value = {
       status: response.status,
@@ -92,15 +98,13 @@ onMounted(() => {
 <template>
   <div class="app-container">
     <!-- Если данные загружаются -->
-    <span v-if="isLoading" class="text-blue-500">
-      Загрузка данных...
-    </span>
+    <span v-if="isLoading" class="text-blue-500">Загрузка данных...</span>
 
     <!-- Если пользователь найден -->
     <h1 v-else-if="telegramUser" class="text-xl font-bold text-center my-4">
       <span class="text-lg font-normal">👋 Добро пожаловать в </span>
       Task Manager
-      <span class="block"> {{ telegramUser.first_name }} 🚀 </span>
+      <span class="block">{{ telegramUser.first_name }} 🚀</span>
     </h1>
 
     <!-- Если пользователь не найден -->
