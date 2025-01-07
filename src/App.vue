@@ -105,9 +105,9 @@ onMounted(() => {
     <div class="mt-4 p-4 border rounded bg-gray-50">
       <h2 class="font-bold text-lg">Детали Telegram ID</h2>
       <p><strong>Тип данных:</strong> {{ telegramIdType }}</p>
-      <p><strong>Значение:</strong> {{ telegramIdValue }}</p>
+      <p><strong>Значение:</strong> "{{ telegramIdValue }}"</p>
+      <p></p>
     </div>
-
     <RouterView v-if="telegramUser" />
   </div>
 </template>
