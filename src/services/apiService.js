@@ -3,7 +3,15 @@ import { API_BASE_URL } from "../consts/const";
 
 export const createTask = async (taskData) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/tasks/parser`, taskData);
+    const response = await axios.post(
+      `${API_BASE_URL}/tasks/parser`,
+      taskData,
+      {
+        headers: {
+          "ngrok-skip-browser-warning": "true", // Устранение предупреждения ngrok
+        },
+      }
+    );
     console.log("apiService:", taskData);
     return response.data;
   } catch (error) {
