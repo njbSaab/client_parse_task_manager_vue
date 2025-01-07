@@ -108,48 +108,23 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="app-container">
-    <!-- Если данные загружаются -->
-    <span v-if="isLoading" class="text-blue-500">Загрузка данных...</span>
-
-    <!-- Если пользователь найден -->
-    <h1 v-else-if="telegramUser" class="text-xl font-bold text-center my-4">
-      <span class="text-lg font-normal">👋 Добро пожаловать в </span>
-      Task Manager
-      <span class="block">{{ telegramUser.first_name }} 🚀</span>
+  <div class="app-container" v-auto-animate>
+    <!-- Приветствие, если пользователь найден -->
+    <h1 class="text-xl font-bold text-center my-4">
+      <span v-if="telegramUser">
+        <span class="text-lg font-normal">👋 Добро пожаловать в </span>
+        Task Manager
+        <span class="block"> {{ telegramUser.first_name }} 🚀 </span>
+      </span>
+      
+      <!-- Сообщение, если пользователь не найден -->
+      <span v-else>
+        Пожалуйста, войдите через Telegram для доступа к приложению.
+      </span>
     </h1>
-
-    <!-- Если пользователь не найден -->
-    <div v-else class="text-red-500">
-      <p><strong>Пользователь не найден</strong></p>
-      <p v-if="errorDetails">Ошибка: {{ errorDetails.message }}</p>
-      <p v-if="errorDetails?.details">Детали: {{ errorDetails.details }}</p>
-      <p v-if="errorDetails?.telegramId">Telegram ID: {{ errorDetails.telegramId }}</p>
-    </div>
-
-    <!-- Отображение данных ответа сервера -->
-    <div v-if="serverResponse" class="mt-8 p-4 border rounded bg-gray-50">
-      <h2 class="font-bold text-lg">Данные сервера</h2>
-      <p><strong>HTTP Статус:</strong> {{ serverResponse.status }} - {{ serverResponse.statusText }}</p>
-      <p><strong>Запрос:</strong> {{ serverResponse.requestUrl }}</p>
-      <pre class="text-sm bg-gray-100 p-2 rounded overflow-auto">
-        {{ serverResponse.data }}
-      </pre>
-    </div>
-
-    <!-- Отображение деталей запроса -->
-    <div v-if="serverRequestDetails" class="mt-4 p-4 border rounded bg-gray-50">
-      <h2 class="font-bold text-lg">Детали запроса</h2>
-      <p><strong>URL:</strong> {{ serverRequestDetails.url }}</p>
-      <p><strong>Telegram ID:</strong> {{ serverRequestDetails.telegramId }}</p>
-    </div>
-
-    <!-- Отображение типа и значения telegramId -->
-    <div class="mt-4 p-4 border rounded bg-gray-50">
-      <h2 class="font-bold text-lg">Детали Telegram ID</h2>
-      <p><strong>Тип данных:</strong> {{ telegramIdType }}</p>
-      <p><strong>Значение:</strong> "{{ telegramIdValue }}"</p>
-    </div>
+    
+    <!-- Вывод контента на основе роутов -->
+    <RouterView />
   </div>
 </template>
 
