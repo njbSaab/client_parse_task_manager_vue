@@ -11,10 +11,10 @@ const telegramIdValue = ref(""); // Значение telegramId
 // Функция для проверки пользователя на сервере
 async function fetchUserFromServer(telegramId) {
   telegramIdType.value = typeof telegramId; // Определяем тип данных
-  telegramIdValue.value = telegramId; // Сохраняем значение
+  telegramIdValue.value = String(telegramId); // Преобразование в строку
 
   try {
-    const response = await fetch(`http://localhost:3082/api/users/${telegramId}`, {
+    const response = await fetch(`http://localhost:3082/api/users/${String(telegramId)}`, {
       method: "GET",
     });
 
