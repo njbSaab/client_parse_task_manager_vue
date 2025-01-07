@@ -7,12 +7,17 @@ const userNotFound = ref(false); // Флаг "пользователь не на
 const errorDetails = ref(null); // Детали ошибки
 const telegramIdType = ref(""); // Тип данных telegramId
 const telegramIdValue = ref(""); // Значение telegramId
+const serverRequestDetails = ref({}); // Детали запроса
 
-// Функция для проверки пользователя на сервере
 async function fetchUserFromServer(telegramId) {
   telegramIdType.value = typeof telegramId; // Тип данных
-  telegramIdValue.value = String(telegramId); // Преобразуем в строку
-  const requestUrl = `http://localhost:3082/api/users/${String(telegramId)}`; // URL запроса
+  telegramIdValue.value = telegramId.toString(); // Преобразуем к строке корректно
+  const requestUrl = `http://localhost:3082/api/users/${telegramIdValue.value}`; // URL запроса
+
+  serverRequestDetails.value = {
+    url: requestUrl,
+    telegramId: telegramIdValue.value,
+  };
 
   try {
     const response = await fetch(requestUrl, {
@@ -34,7 +39,7 @@ async function fetchUserFromServer(telegramId) {
       userNotFound.value = true;
       errorDetails.value = {
         message: data.message || "Пользователь не найден",
-        telegramId,
+        telegramId: telegramIdValue.value,
       };
     }
   } catch (error) {
@@ -42,12 +47,11 @@ async function fetchUserFromServer(telegramId) {
     errorDetails.value = {
       message: "Ошибка при запросе к серверу",
       details: error.message,
-      telegramId,
+      telegramId: telegramIdValue.value,
       requestUrl,
     };
   }
 }
-
 // Обработка при монтировании компонента
 onMounted(() => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -105,6 +109,12 @@ onMounted(() => {
         <pre class="text-sm bg-gray-100 p-2 rounded overflow-auto">
           {{ serverResponse.data }}
         </pre>
+      </div>
+
+      <div v-if="serverRequestDetails" class="mt-4 p-4 border rounded bg-gray-50">
+        <h2 class="font-bold text-lg">Детали запроса</h2>
+        <p><strong>URL:</strong> {{ serverRequestDetails.url }}</p>
+        <p><strong>Telegram ID:</strong> {{ serverRequestDetails.telegramId }}</p>
       </div>
 
     <!-- Отображение типа и значения telegramId -->
