@@ -10,19 +10,12 @@ const telegramIdValue = ref(""); // Значение telegramId
 const serverRequestDetails = ref({}); // Детали запроса
 
 async function fetchUserFromServer(telegramId) {
-  telegramIdType.value = typeof telegramId; // Тип данных
-  telegramIdValue.value = telegramId.toString(); // Преобразуем к строке корректно
-  const requestUrl = `http://localhost:3082/api/users/${telegramIdValue.value}`; // URL запроса
-
-  serverRequestDetails.value = {
-    url: requestUrl,
-    telegramId: telegramIdValue.value,
-  };
+  telegramIdType.value = typeof telegramId; // Определяем тип данных
+  telegramIdValue.value = String(telegramId); // Преобразуем в строку
+  const requestUrl = `http://localhost:3082/api/users/${telegramIdValue.value}`;
 
   try {
-    const response = await fetch(requestUrl, {
-      method: "GET",
-    });
+    const response = await fetch(requestUrl, { method: "GET" });
 
     serverResponse.value = {
       status: response.status,
@@ -56,7 +49,9 @@ async function fetchUserFromServer(telegramId) {
 onMounted(() => {
   const urlParams = new URLSearchParams(window.location.search);
   const tgWebAppData = urlParams.get("tgWebAppData");
-
+  console.log(telegramIdType);
+  console.log(telegramIdValue);
+  
   if (tgWebAppData) {
     try {
       const userData = JSON.parse(decodeURIComponent(tgWebAppData));
