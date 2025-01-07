@@ -3,19 +3,22 @@ import { API_BASE_URL } from "../consts/const";
 
 export const createTask = async (taskData) => {
   try {
+    console.log("Отправка задачи с данными:", taskData);
     const response = await axios.post(
       `${API_BASE_URL}/tasks/parser`,
       taskData,
       {
         headers: {
-          "ngrok-skip-browser-warning": "true", // Устранение предупреждения ngrok
+          "Content-Type": "application/json",
         },
       }
     );
-    console.log("apiService:", taskData);
     return response.data;
   } catch (error) {
-    console.error("Ошибка при создании задачи:", error);
+    console.error(
+      "Ошибка при создании задачи:",
+      error.response?.data || error.message
+    );
     throw error.response?.data || { error: "Неизвестная ошибка" };
   }
 };
