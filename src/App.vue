@@ -10,18 +10,19 @@ const telegramIdValue = ref(""); // Значение telegramId
 
 // Функция для проверки пользователя на сервере
 async function fetchUserFromServer(telegramId) {
-  telegramIdType.value = typeof telegramId; // Определяем тип данных
-  telegramIdValue.value = String(telegramId); // Преобразование в строку
+  telegramIdType.value = typeof telegramId; // Тип данных
+  telegramIdValue.value = String(telegramId); // Преобразуем в строку
+  const requestUrl = `http://localhost:3082/api/users/${String(telegramId)}`; // URL запроса
 
   try {
-    const response = await fetch(`http://localhost:3082/api/users/${String(telegramId)}`, {
+    const response = await fetch(requestUrl, {
       method: "GET",
     });
 
-    // Сохраняем статус ответа
     serverResponse.value = {
       status: response.status,
       statusText: response.statusText,
+      requestUrl,
     };
 
     const data = await response.json();
@@ -42,6 +43,7 @@ async function fetchUserFromServer(telegramId) {
       message: "Ошибка при запросе к серверу",
       details: error.message,
       telegramId,
+      requestUrl,
     };
   }
 }
@@ -84,6 +86,9 @@ onMounted(() => {
         <p v-if="errorDetails">Ошибка: {{ errorDetails.message }}</p>
         <p v-if="errorDetails?.details">Детали: {{ errorDetails.details }}</p>
         <p v-if="errorDetails?.telegramId">Telegram ID: {{ errorDetails.telegramId }}</p>
+        <p v-if="errorDetails">Детали: {{ errorDetails }}</p>
+        <span v-if="errorDetails"> {{ telegramUser }} 🚀 </span>
+
       </span>
 
       <!-- Если данные загружаются -->
@@ -93,20 +98,20 @@ onMounted(() => {
     </h1>
 
     <!-- Отображение данных ответа сервера -->
-    <div v-if="serverResponse" class="mt-8 p-4 border rounded bg-gray-50">
-      <h2 class="font-bold text-lg">Данные сервера</h2>
-      <p><strong>HTTP Статус:</strong> {{ serverResponse.status }} - {{ serverResponse.statusText }}</p>
-      <pre class="text-sm bg-gray-100 p-2 rounded overflow-auto">
-        {{ serverResponse.data }}
-      </pre>
-    </div>
+     <div v-if="serverResponse" class="mt-8 p-4 border rounded bg-gray-50">
+        <h2 class="font-bold text-lg">Данные сервера</h2>
+        <p><strong>HTTP Статус:</strong> {{ serverResponse.status }} - {{ serverResponse.statusText }}</p>
+        <p><strong>Запрос:</strong> {{ serverResponse.requestUrl }}</p>
+        <pre class="text-sm bg-gray-100 p-2 rounded overflow-auto">
+          {{ serverResponse.data }}
+        </pre>
+      </div>
 
     <!-- Отображение типа и значения telegramId -->
     <div class="mt-4 p-4 border rounded bg-gray-50">
       <h2 class="font-bold text-lg">Детали Telegram ID</h2>
       <p><strong>Тип данных:</strong> {{ telegramIdType }}</p>
       <p><strong>Значение:</strong> "{{ telegramIdValue }}"</p>
-      <p></p>
     </div>
     <RouterView v-if="telegramUser" />
   </div>
