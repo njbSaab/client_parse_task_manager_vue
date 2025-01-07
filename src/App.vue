@@ -1,8 +1,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 
-const telegramUser = ref(null);
-const userNotFound = ref(false);
+const telegramUser = ref(null); // Данные пользователя
+const serverResponse = ref(null); // Ответ от сервера
+const userNotFound = ref(false); // Флаг "пользователь не найден"
+const errorDetails = ref(null); // Детали ошибки
 
 // Функция для проверки пользователя на сервере
 async function fetchUserFromServer(telegramId) {
@@ -11,17 +13,24 @@ async function fetchUserFromServer(telegramId) {
       method: "GET",
     });
     const data = await response.json();
+    serverResponse.value = data; // Сохраняем ответ сервера для отображения
 
     if (data.success) {
-      console.log("Пользователь найден на сервере:", data.user);
-      telegramUser.value = data.user;
+      telegramUser.value = data.user; // Пользователь найден
     } else {
-      console.warn("Пользователь не найден:", data.message);
       userNotFound.value = true;
+      errorDetails.value = {
+        message: data.message || "Пользователь не найден",
+        telegramId,
+      };
     }
   } catch (error) {
-    console.error("Ошибка при проверке пользователя на сервере:", error);
     userNotFound.value = true;
+    errorDetails.value = {
+      message: "Ошибка при запросе к серверу",
+      details: error.message,
+      telegramId,
+    };
   }
 }
 
@@ -33,39 +42,53 @@ onMounted(() => {
   if (tgWebAppData) {
     try {
       const userData = JSON.parse(decodeURIComponent(tgWebAppData));
-      console.log("Данные пользователя из tgWebAppData:", userData);
-
-      // Проверяем пользователя на сервере
-      fetchUserFromServer(userData.id);
+      serverResponse.value = { telegramData: userData }; // Данные Telegram
+      fetchUserFromServer(userData.id); // Проверяем пользователя на сервере
     } catch (error) {
-      console.error("Ошибка при парсинге tgWebAppData:", error);
       userNotFound.value = true;
+      errorDetails.value = {
+        message: "Ошибка при парсинге tgWebAppData",
+        details: error.message,
+      };
     }
   } else {
-    console.warn("tgWebAppData отсутствует в URL.");
     userNotFound.value = true;
+    errorDetails.value = { message: "tgWebAppData отсутствует в URL" };
   }
 });
 </script>
 
 <template>
-  <div class="app-container" v-auto-animate>
-    <!-- Отображение данных пользователя -->
+  <div class="app-container">
+    <!-- Если пользователь найден -->
     <h1 class="text-xl font-bold text-center my-4">
       <span v-if="telegramUser">
         <span class="text-lg font-normal">👋 Добро пожаловать в </span>
         Task Manager
         <span class="block"> {{ telegramUser.first_name }} 🚀 </span>
       </span>
-      <!-- Сообщение, если пользователь не найден -->
-      <span v-else-if="userNotFound">
-        Пожалуйста, зарегистрируйтесь через Telegram для доступа к приложению.
+
+      <!-- Если пользователь не найден -->
+      <span v-else-if="userNotFound" class="text-red-500">
+        <p><strong>Пользователь не найден</strong></p>
+        <p v-if="errorDetails">Ошибка: {{ errorDetails.message }}</p>
+        <p v-if="errorDetails?.details">Детали: {{ errorDetails.details }}</p>
+        <p v-if="errorDetails?.telegramId">Telegram ID: {{ errorDetails.telegramId }}</p>
       </span>
-      <!-- Сообщение, если данные всё ещё загружаются -->
+
+      <!-- Если данные загружаются -->
       <span v-else>
         Загрузка данных...
       </span>
     </h1>
+
+    <!-- Отображение данных ответа сервера -->
+    <div v-if="serverResponse" class="mt-8 p-4 border rounded bg-gray-50">
+      <h2 class="font-bold text-lg">Данные сервера</h2>
+      <pre class="text-sm bg-gray-100 p-2 rounded overflow-auto">
+        {{ serverResponse }}
+      </pre>
+    </div>
 
     <RouterView v-if="telegramUser" />
   </div>
