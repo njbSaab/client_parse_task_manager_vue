@@ -11,39 +11,35 @@ const serverRequestDetails = ref(null); // Детали запроса
 const isLoading = ref(true); // Флаг загрузки данных
 
 async function fetchUserFromServer(telegramId) {
-  telegramIdType.value = typeof telegramId; // Определяем тип данных
-  telegramIdValue.value = String(telegramId); // Преобразуем в строку
+  telegramIdType.value = typeof telegramId;
+  telegramIdValue.value = `${telegramId}`;
   const requestUrl = `https://095d-176-37-193-72.ngrok-free.app/api/users/${telegramIdValue.value}`;
-  serverRequestDetails.value = {
-    url: requestUrl,
-    telegramId: telegramIdValue.value,
-  };
-
-  isLoading.value = true; // Устанавливаем состояние загрузки
+  serverRequestDetails.value = { url: requestUrl, telegramId: telegramIdValue.value };
+  isLoading.value = true;
 
   try {
     const response = await fetch(requestUrl, { method: "GET" });
-
-    // Сохраняем детали ответа
     serverResponse.value = {
       status: response.status,
       statusText: response.statusText,
       requestUrl,
     };
 
-    // Проверка статуса ответа
+    // Обработка случаев, когда ответ не JSON
     if (!response.ok) {
-      throw new Error(
-        `HTTP ошибка: ${response.status} ${response.statusText}`
-      );
+      throw new Error(`HTTP ошибка: ${response.status} ${response.statusText}`);
+    }
+
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Ответ сервера не является JSON");
     }
 
     const data = await response.json();
     serverResponse.value.data = data;
 
-    // Проверяем, успешен ли запрос
     if (data.success) {
-      telegramUser.value = data.user; // Пользователь найден
+      telegramUser.value = data.user;
     } else {
       userNotFound.value = true;
       errorDetails.value = {
@@ -52,7 +48,6 @@ async function fetchUserFromServer(telegramId) {
       };
     }
   } catch (error) {
-    // Обработка ошибок запроса
     userNotFound.value = true;
     errorDetails.value = {
       message: "Ошибка при запросе к серверу",
@@ -61,7 +56,7 @@ async function fetchUserFromServer(telegramId) {
       requestUrl,
     };
   } finally {
-    isLoading.value = false; // Снимаем состояние загрузки
+    isLoading.value = false;
   }
 }
 
