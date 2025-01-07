@@ -31,7 +31,8 @@ a:hover {
 body {
   margin: 0 auto;
   min-width: 320px;
-  min-height: 100vh;
+  height: 100dvh;
+  min-height: -webkit-fill-available;
 }
 
 h1 {
@@ -44,6 +45,7 @@ h1 {
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  height: 100%;
 }
 .nj:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
