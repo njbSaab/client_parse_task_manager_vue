@@ -19,13 +19,13 @@ async function fetchUserFromServer(telegramId) {
 
   try {
     const response = await fetch(requestUrl, { method: "GET" });
+
     serverResponse.value = {
       status: response.status,
       statusText: response.statusText,
       requestUrl,
     };
 
-    // Обработка случаев, когда ответ не JSON
     if (!response.ok) {
       throw new Error(`HTTP ошибка: ${response.status} ${response.statusText}`);
     }
@@ -67,12 +67,16 @@ onMounted(() => {
   if (tgWebAppData) {
     try {
       const userData = JSON.parse(decodeURIComponent(tgWebAppData));
+      if (!userData.id) {
+        throw new Error("Telegram ID отсутствует в данных");
+      }
+
       serverResponse.value = { telegramData: userData }; // Данные Telegram
       fetchUserFromServer(userData.id); // Проверяем пользователя на сервере
     } catch (error) {
       userNotFound.value = true;
       errorDetails.value = {
-        message: "Ошибка при парсинге tgWebAppData",
+        message: "Ошибка при обработке tgWebAppData",
         details: error.message,
       };
       isLoading.value = false;
