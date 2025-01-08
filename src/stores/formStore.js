@@ -55,14 +55,14 @@ export const useFormStore = defineStore("form", {
         // Получаем Telegram данные из localStorage
         const telegramUser = JSON.parse(localStorage.getItem("telegram_user"));
 
-        if (!telegramUser?.id) {
+        if (!telegramUser?.telegram_id) {
           throw new Error(
             "Ошибка: Не удалось получить telegram_id из localStorage"
           );
         }
 
         // Устанавливаем telegram_id как userId
-        this.formData.userId = telegramUser.id;
+        this.formData.userId = telegramUser.telegram_id; // Используем telegram_id
 
         // Рассчитываем интервал
         this.formData.interval = this.calculateInterval();
@@ -70,7 +70,7 @@ export const useFormStore = defineStore("form", {
         // Подготавливаем данные для отправки
         const cleanFormData = {
           ...this.formData, // Копируем данные из формы
-          userId: String(telegramUser.id), // Убедимся, что ID передается как строка (если сервер этого требует)
+          userId: telegramUser.telegram_id, // Убедимся, что ID передается как строка
         };
 
         console.log("Чистый объект для отправки на сервер:", cleanFormData);
