@@ -112,8 +112,14 @@ export const useFormStore = defineStore("form", {
       this.error = null;
       try {
         const data = await fetchTasks();
-        this.tasks = data;
-        this.selectedTask = data.length > 0 ? data[0] : null; // Устанавливаем первую задачу
+        // Проверяем наличие и форматируем дату
+        this.tasks = data.map((task) => ({
+          ...task,
+          created_at: task.created_at
+            ? new Date(task.created_at).toLocaleString()
+            : "Неизвестно",
+        }));
+        this.selectedTask = this.tasks.length > 0 ? this.tasks[0] : null; // Устанавливаем первую задачу
         console.log("Загруженные задачи:", this.tasks);
       } catch (error) {
         this.error = error.message || "Ошибка при загрузке задач";
