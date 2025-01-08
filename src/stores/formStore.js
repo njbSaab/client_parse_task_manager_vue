@@ -48,34 +48,54 @@ export const useFormStore = defineStore("form", {
         return;
       }
       this.isSubmitting = true;
+
       try {
         console.log("Форма отправляется...");
+
+        // Получаем Telegram данные из localStorage
         const telegramUser = JSON.parse(localStorage.getItem("telegram_user"));
 
         if (!telegramUser?.id) {
-          throw new Error("Ошибка: Не удалось получить userId из localStorage");
+          throw new Error(
+            "Ошибка: Не удалось получить telegram_id из localStorage"
+          );
         }
 
+        // Устанавливаем telegram_id как userId
         this.formData.userId = telegramUser.id;
+
+        // Рассчитываем интервал
         this.formData.interval = this.calculateInterval();
 
-        const cleanFormData = JSON.parse(JSON.stringify(this.formData));
+        // Подготавливаем данные для отправки
+        const cleanFormData = {
+          ...this.formData, // Копируем данные из формы
+          userId: String(telegramUser.id), // Убедимся, что ID передается как строка (если сервер этого требует)
+        };
+
         console.log("Чистый объект для отправки на сервер:", cleanFormData);
 
+        // Отправляем запрос на создание задачи
         const response = await createTask(cleanFormData);
+
         console.log("Ответ от сервера:", response);
 
+        // Показываем уведомление об успешном создании задачи
         this.notification.isVisible = true;
         this.notification.type = "success";
 
-        // После создания задачи обновляем список задач
+        // Обновляем список задач
         await this.loadTasks();
       } catch (error) {
         console.error("Ошибка при создании задачи:", error);
+
+        // Показываем уведомление об ошибке
         this.notification.isVisible = true;
         this.notification.type = "error";
       } finally {
         this.isSubmitting = false;
+
+        // Скрываем уведомление через 3 секунды
         setTimeout(() => {
           this.notification.isVisible = false;
         }, 3000);
