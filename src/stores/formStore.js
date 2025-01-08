@@ -67,10 +67,16 @@ export const useFormStore = defineStore("form", {
         // Рассчитываем интервал
         this.formData.interval = this.calculateInterval();
 
+        // Обрезаем name до третьего слэша
+        const parsedUrl = new URL(this.formData.url);
+        const trimmedName = `${parsedUrl.protocol}//${parsedUrl.host}/`; // Формируем нужную часть
+        console.log("Обрезанное имя:", trimmedName);
+
         // Подготавливаем данные для отправки
         const cleanFormData = {
           ...this.formData, // Копируем данные из формы
           userId: telegramUser.telegram_id, // Убедимся, что ID передается как строка
+          name: trimmedName, // Используем обрезанное значение
         };
 
         console.log("Чистый объект для отправки на сервер:", cleanFormData);
