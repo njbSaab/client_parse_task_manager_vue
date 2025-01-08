@@ -23,31 +23,20 @@ export const createTask = async (taskData) => {
   }
 };
 
-export const fetchTasks = async (userId) => {
+export const fetchTasks = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/tasks`, {
-      params: { userId }, // Передаем userId в качестве параметра
-      headers: {
-        "ngrok-skip-browser-warning": "true",
-      },
-    });
+    const response = await axios.get(`${API_BASE_URL}/tasks`);
     return response.data;
   } catch (error) {
-    console.error(
-      "Ошибка при получении задач:",
-      error.response?.data || error.message
-    );
+    console.error("Ошибка при получении задач:", error);
     throw error.response?.data || { error: "Неизвестная ошибка" };
   }
 };
 
 export const fetchTaskLogs = async (taskId) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/tasks/${taskId}/logs`, {
-      headers: {
-        "ngrok-skip-browser-warning": "true", // Устранение предупреждения ngrok
-      },
-    });
+    const response = await axios.get(`${API_BASE_URL}/tasks/${taskId}/logs`);
+    console.log("fetchTaskLogs", response);
     return response.data;
   } catch (error) {
     console.error("Ошибка при получении логов задачи:", error.message);
