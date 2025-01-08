@@ -111,25 +111,24 @@ export const useFormStore = defineStore("form", {
       this.isLoading = true;
       this.error = null;
       try {
-        const data = await fetchTasks();
-        // Проверяем наличие и форматируем дату
+        const telegramUser = JSON.parse(localStorage.getItem("telegram_user"));
+        if (!telegramUser?.telegram_id) {
+          throw new Error("Не удалось получить userId");
+        }
+
+        const data = await fetchTasks(telegramUser.telegram_id); // Передаем userId
         this.tasks = data.map((task) => ({
           ...task,
           created_at: task.created_at
             ? new Date(task.created_at).toLocaleString()
             : "Неизвестно",
         }));
-        this.selectedTask = this.tasks.length > 0 ? this.tasks[0] : null; // Устанавливаем первую задачу
-        console.log("Загруженные задачи:", this.tasks);
+        this.selectedTask = this.tasks.length > 0 ? this.tasks[0] : null;
       } catch (error) {
         this.error = error.message || "Ошибка при загрузке задач";
-        console.error("Ошибка при загрузке задач:", error);
       } finally {
         this.isLoading = false;
       }
-    },
-    selectTask(task) {
-      this.selectedTask = task;
     },
     async loadTaskLogs(taskId) {
       if (this.taskLogs[taskId]) {

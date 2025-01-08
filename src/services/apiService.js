@@ -23,11 +23,12 @@ export const createTask = async (taskData) => {
   }
 };
 
-export const fetchTasks = async () => {
+export const fetchTasks = async (userId) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/tasks`, {
+      params: { userId }, // Передаем userId в качестве параметра
       headers: {
-        "ngrok-skip-browser-warning": "true", // Устранение предупреждения ngrok
+        "ngrok-skip-browser-warning": "true",
       },
     });
     return response.data;
