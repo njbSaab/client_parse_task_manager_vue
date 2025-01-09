@@ -112,6 +112,7 @@ export const useFormStore = defineStore("form", {
       this.error = null;
       try {
         const data = await fetchTasks();
+        console.log("Тип контента ответа:", data?.headers?.get("content-type"));
         console.log("Данные, полученные с сервера:", data);
 
         if (!Array.isArray(data)) {
