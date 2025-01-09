@@ -58,3 +58,10 @@ h1 {
   top: 50%;
   transform: translate(-50%, -50%);
 }
+.message-info {
+  width: 80%;
+  margin: 0 auto;
+  padding: 50px 20px;
+  margin-top: 50px;
+  border-radius: 20px;
+}

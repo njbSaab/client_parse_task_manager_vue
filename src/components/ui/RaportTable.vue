@@ -5,7 +5,7 @@
 
     <!-- Ошибка -->
     <div v-else-if="formStore.error">
-      <div v-if="formStore.tasks.length === 0" class="text-gray-600">
+      <div v-if="formStore.tasks.length === 0" class="message-info bg-slate-50">
         У вас пока нет отчетов. Вам нужно перейти и создать
         <router-link
           to="/"

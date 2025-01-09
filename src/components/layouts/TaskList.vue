@@ -3,7 +3,7 @@
     <h1 class="text-xl font-bold">Список задач</h1>
     <IsLoading v-if="formStore.isLoading" />
     <div v-else>
-      <div v-if="formStore.tasks.length === 0" class="text-gray-600">
+      <div v-if="formStore.tasks.length === 0" class="message-info bg-slate-50">
         У вас нет задач. Вам нужно перейти и создать
         <router-link
           to="/"
