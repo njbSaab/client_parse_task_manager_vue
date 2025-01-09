@@ -19,7 +19,7 @@
     <PopoverIsSuccess />
 
     <!-- Логи запросов -->
-    <div v-if="logs.length" class="mt-4 p-4 border rounded bg-gray-100">
+    <div v-if="logs.length" class="mt-28 p-4 border rounded bg-gray-100 text-slate-300">
       <h2 class="font-bold text-lg">Логи запросов</h2>
       <ul class="text-sm">
         <li v-for="(log, index) in logs" :key="index">

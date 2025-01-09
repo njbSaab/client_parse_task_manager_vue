@@ -117,10 +117,11 @@ onMounted(() => {
     </h1>
 
     <!-- Проверка записи в localStorage -->
-    <div v-if="isStoredInLocalStorage" class="text-green-500 text-center">
+    <!-- <div v-if="isStoredInLocalStorage" class="text-green-500 text-center">
       Данные успешно записаны в localStorage! 🚀
-    </div>
-    <div v-else-if="!isLoading && telegramUser" class="text-red-500 text-center">
+    </div> -->
+    
+    <div v-if="!isLoading && telegramUser" class="text-red-500 text-center">
       Не удалось записать данные в localStorage.
     </div>
 
