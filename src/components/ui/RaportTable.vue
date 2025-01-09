@@ -6,7 +6,7 @@
     <!-- Ошибка -->
     <div v-else-if="formStore.error">
       <div v-if="formStore.tasks.length === 0" class="message-info bg-slate-50">
-        У вас пока нет отчетов. Вам нужно перейти и создать
+       <span class="block font-bold">У вас пока нет отчетов.</span>  Вам нужно перейти и создать
         <router-link
           to="/"
           class="text-slate-800 font-semibold inline-block hover:underline"

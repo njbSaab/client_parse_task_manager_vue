@@ -4,7 +4,8 @@
     <IsLoading v-if="formStore.isLoading" />
     <div v-else>
       <div v-if="formStore.tasks.length === 0" class="message-info bg-slate-50">
-        У вас нет задач. Вам нужно перейти и создать
+        <span class="block font-bold">У вас пока нет задач.</span> 
+                Вам нужно перейти и создать
         <router-link
           to="/"
           class="text-slate-800 font-semibold inline-block hover:underline"
