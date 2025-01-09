@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import { API_BASE_URL } from "./consts/const";
 
 const telegramUser = ref(null); // Данные пользователя
 const serverResponse = ref(null); // Ответ от сервера
@@ -15,7 +16,7 @@ async function fetchUserFromServer(telegramId) {
   telegramIdType.value = typeof telegramId;
   telegramIdValue.value = String(telegramId); // Преобразуем в строку
 
-  const requestUrl = `https://095d-176-37-193-72.ngrok-free.app/api/users/${telegramIdValue.value}`;
+  const requestUrl = `${API_BASE_URL}/users/${telegramIdValue.value}`;
   serverRequestDetails.value = { url: requestUrl, telegramId: telegramIdValue.value };
   isLoading.value = true;
 
