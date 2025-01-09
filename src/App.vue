@@ -120,10 +120,10 @@ onMounted(() => {
     <!-- <div v-if="isStoredInLocalStorage" class="text-green-500 text-center">
       Данные успешно записаны в localStorage! 🚀
     </div> -->
-    
-    <div v-if="!isLoading && telegramUser" class="text-red-500 text-center">
+
+    <!-- <div v-if="!isLoading && telegramUser" class="text-red-500 text-center">
       Не удалось записать данные в localStorage.
-    </div>
+    </div> -->
 
     <!-- Вывод контента на основе роутов -->
     <RouterView />
