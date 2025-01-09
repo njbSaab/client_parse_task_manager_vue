@@ -17,6 +17,7 @@ console.log("Telegram WebApp доступен:", window.Telegram?.WebApp);
 const telegram = window.Telegram?.WebApp;
 
 if (telegram) {
+  telegram.expand(); // Полноэкранный режим
   telegram.ready(); // Сигнализируем Telegram, что Mini App готово
   console.log("Telegram WebApp инициализировано");
 
