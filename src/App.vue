@@ -77,9 +77,7 @@ onMounted(() => {
   const urlParams = new URLSearchParams(window.location.search);
   const tgWebAppData = urlParams.get("tgWebAppData");
 
-  if (tgWebAppData) {
-    telegram.expand(); // Переключаемся в полноэкранный режим
-      
+  if (tgWebAppData) {      
     try {
       const userData = JSON.parse(decodeURIComponent(tgWebAppData));
       if (!userData.id) {
