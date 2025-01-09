@@ -26,7 +26,8 @@ export const createTask = async (taskData) => {
 export const fetchTasks = async () => {
   try {
     const response = await axios.get(`${API_BASE_URL}/tasks`);
-    return response.data;
+    console.log("Ответ от API:", response.data); // Лог API-ответа
+    return response.data; // Убедитесь, что это массив
   } catch (error) {
     console.error("Ошибка при получении задач:", error);
     throw error.response?.data || { error: "Неизвестная ошибка" };
