@@ -1,15 +1,17 @@
-//layouts/TabsLayout.vue
 <script setup>
 import { ref } from "vue";
 
+// Вкладки
 const tabs = ref([
   { id: "all", label: "Всё" },
   { id: "search", label: "Новая задача" },
   { id: "report", label: "Отчёт" },
 ]);
 
-const activeTab = ref("search");
+// Активная вкладка
+const activeTab = ref("search"); // Значение по умолчанию "search"
 
+// Смена вкладки по клику
 const setActiveTab = (id) => {
   activeTab.value = id;
 };
@@ -17,6 +19,7 @@ const setActiveTab = (id) => {
 
 <template>
   <div class="tabs-layout">
+    <!-- Навигация по вкладкам -->
     <ul class="flex flex-wrap px-1.5 py-1.5 list-none rounded-md bg-slate-100">
       <li v-for="tab in tabs" :key="tab.id" class="z-30 flex-auto text-center">
         <button
@@ -31,6 +34,7 @@ const setActiveTab = (id) => {
       </li>
     </ul>
 
+    <!-- Содержимое вкладок -->
     <div class="py-5" v-auto-animate>
       <slot name="content-all" v-if="activeTab === 'all'" />
       <slot name="content-search" v-if="activeTab === 'search'" />

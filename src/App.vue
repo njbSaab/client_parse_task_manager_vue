@@ -103,7 +103,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="app-container bg-white h-full" v-auto-animate>
+  <div class="app-container bg-white h-full">
     <!-- Приветствие, если пользователь найден -->
     <h1 class="text-xl font-bold text-center my-4">
       <span v-if="telegramUser">

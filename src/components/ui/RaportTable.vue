@@ -133,12 +133,14 @@ const closeLogs = () => {
 }
 .logs-body{
 	width: 100%;
-	min-height: 70%;
+	height: 70%;
 	background: rgb(241 245 249);
+  overflow: hidden;
 	padding: 20px;
 	z-index: 100;
 	border-radius: 20px;
   overflow-x: scroll;
+  overflow-x: auto;
   padding-top: 55px;
   
 }
