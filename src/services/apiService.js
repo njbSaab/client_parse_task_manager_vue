@@ -9,7 +9,8 @@ export const createTask = async (taskData) => {
       taskData,
       {
         headers: {
-          "Content-Type": "application/json",
+          Accept: "application/json",
+          "ngrok-skip-browser-warning": "true", // Устранение предупреждения ngrok
         },
       }
     );
@@ -36,7 +37,13 @@ export const fetchTasks = async () => {
 
 export const fetchTaskLogs = async (taskId) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/tasks/${taskId}/logs`);
+    const response = await axios.get(`${API_BASE_URL}/tasks/${taskId}/logs`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "ngrok-skip-browser-warning": "true", // Устранение предупреждения ngrok
+      },
+    });
     console.log("fetchTaskLogs", response);
     return response.data;
   } catch (error) {
