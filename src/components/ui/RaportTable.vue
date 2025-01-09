@@ -153,7 +153,7 @@ const closeLogs = () => {
 .logs-body h3{
     position: fixed;
     left: 50%;
-    top: 10.5%;
+    top: 12.5%;
     transform: translateX(-50%);
 }
 .btn-close{
