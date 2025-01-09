@@ -110,10 +110,9 @@ export const useFormStore = defineStore("form", {
     async loadTasks() {
       this.isLoading = true;
       this.error = null;
+
       try {
         const data = await fetchTasks();
-        console.log("Тип контента ответа:", data?.headers?.get("content-type"));
-        console.log("Данные, полученные с сервера:", data);
 
         if (!Array.isArray(data)) {
           throw new Error("Сервер вернул данные, не являющиеся массивом");
@@ -129,8 +128,16 @@ export const useFormStore = defineStore("form", {
         this.selectedTask = this.tasks.length > 0 ? this.tasks[0] : null;
         console.log("Загруженные задачи:", this.tasks);
       } catch (error) {
-        this.error = error.message || "Ошибка при загрузке задач";
-        console.error("Ошибка при загрузке задач:", error);
+        if (
+          error.message ===
+          "У вас нет задач. Вам нужно перейти в новую задачу и создать."
+        ) {
+          console.warn(error.message);
+          this.tasks = [];
+        } else {
+          this.error = error.message || "Ошибка при загрузке задач";
+          console.error("Ошибка при загрузке задач:", error);
+        }
       } finally {
         this.isLoading = false;
       }

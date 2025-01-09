@@ -5,7 +5,12 @@
       <div v-else-if="formStore.error" class="text-red-500">{{ formStore.error }}</div>
       <div v-else>
         <div v-if="formStore.tasks.length === 0" class="text-gray-500">
-          Задач пока нет.
+          У вас нет задач. Вам нужно перейти и создать  
+          <router-link to="/" 
+                       class="text-slate-800 font-semibold text-sm hover:underline flex items-center"
+          >
+            новую задачу
+          </router-link>
         </div>
         <div class="grid gap-4 mt-4 grid-cols-1 sm:grid-cols-2">
           <TaskCard

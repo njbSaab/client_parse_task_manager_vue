@@ -24,14 +24,42 @@ export const createTask = async (taskData) => {
   }
 };
 
+// export const fetchTasks = async () => {
+//   try {
+//     const response = await axios.get(`${API_BASE_URL}/tasks`, {
+//       headers: {
+//         Accept: "application/json",
+//         "ngrok-skip-browser-warning": "true", // Устранение предупреждения ngrok
+//       },
+//     });
+//     console.log("Ответ от API:", response.data); // Лог API-ответа
+//     return response.data; // Убедитесь, что это массив
+//   } catch (error) {
+//     console.error("Ошибка при получении задач:", error);
+//     throw error.response?.data || { error: "Неизвестная ошибка" };
+//   }
+// };
+
 export const fetchTasks = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/tasks`, {
-      headers: {
-        Accept: "application/json",
-        "ngrok-skip-browser-warning": "true", // Устранение предупреждения ngrok
-      },
-    });
+    const telegramUser = JSON.parse(localStorage.getItem("telegram_user"));
+
+    if (!telegramUser?.telegram_id) {
+      throw new Error(
+        "Ошибка: Не удалось получить telegram_id из localStorage"
+      );
+    }
+
+    const response = await axios.get(
+      `${API_BASE_URL}/tasks/by-telegram/${telegramUser.telegram_id}`,
+      {
+        headers: {
+          Accept: "application/json",
+          "ngrok-skip-browser-warning": "true", // Устранение предупреждения ngrok
+        },
+      }
+    );
+
     console.log("Ответ от API:", response.data); // Лог API-ответа
     return response.data; // Убедитесь, что это массив
   } catch (error) {
