@@ -79,7 +79,6 @@ onMounted(() => {
 
   if (tgWebAppData) {
     telegram.expand(); // Переключаемся в полноэкранный режим
-    telegram.ready();  // Сообщаем Telegram, что приложение готово
       
     try {
       const userData = JSON.parse(decodeURIComponent(tgWebAppData));
