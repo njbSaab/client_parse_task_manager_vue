@@ -24,7 +24,7 @@ async function fetchUserFromServer(telegramId) {
     const response = await fetch(requestUrl, {
       method: "GET",
       headers: {
-        "Accept": "application/json",
+        Accept: "application/json",
         "ngrok-skip-browser-warning": "true", // Устранение предупреждения ngrok
       },
     });
@@ -77,7 +77,7 @@ onMounted(() => {
   const urlParams = new URLSearchParams(window.location.search);
   const tgWebAppData = urlParams.get("tgWebAppData");
 
-  if (tgWebAppData) {      
+  if (tgWebAppData) {
     try {
       const userData = JSON.parse(decodeURIComponent(tgWebAppData));
       if (!userData.id) {
@@ -111,9 +111,7 @@ onMounted(() => {
         Task Manager
         <span class="block"> {{ telegramUser.first_name }} 🚀 </span>
       </span>
-      <span v-else>
-        Пожалуйста, войдите через Telegram для доступа к приложению.
-      </span>
+      <span v-else> Пожалуйста, войдите через Telegram для доступа к приложению. </span>
     </h1>
 
     <!-- Проверка записи в localStorage -->
