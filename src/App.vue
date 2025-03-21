@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted } from "vue";
 import { useUser } from "./composables/useUser";
-
+import IsLoading from "@/components/ui/IsLoading.vue"; 
 const {
   telegramUser,
   serverResponse,
@@ -21,7 +21,6 @@ onMounted(() => {
       if (!userData.id) {
         throw new Error("Telegram ID отсутствует в данных");
       }
-
       serverResponse.value = { telegramData: userData };
       fetchUserFromServer(userData.id);
     } catch (error) {
@@ -40,17 +39,23 @@ onMounted(() => {
 
 <template>
   <div class="app-container bg-white h-full">
-    <h1 class="text-xl font-bold text-center my-4">
-      <span v-if="telegramUser">
-        <span class="text-lg font-normal">👋 Добро пожаловать в </span>
-        Task Manager
-        <span class="block"> {{ telegramUser.first_name }} 🚀 </span>
-      </span>
-      <span v-else>
-        Пожалуйста, войдите через Telegram для доступа к приложению.
-      </span>
-    </h1>
-    <RouterView />
+    <!-- Пока идет загрузка, отображаем лоадер -->
+    <IsLoading v-if="isLoading" />
+    
+    <!-- После загрузки показываем остальное содержимое -->
+    <div v-else>
+      <h1 class="text-xl font-bold text-center my-4">
+        <span v-if="telegramUser">
+          <span class="text-lg font-normal">👋 Добро пожаловать в </span>
+          Task Manager
+          <span class="block"> {{ telegramUser.first_name }} 🚀 </span>
+        </span>
+        <span v-else>
+          Пожалуйста, войдите через Telegram для доступа к приложению.
+        </span>
+      </h1>
+      <RouterView />
+    </div>
   </div>
 </template>
 
