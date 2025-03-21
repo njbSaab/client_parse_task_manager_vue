@@ -3,6 +3,8 @@ import App from "./App.vue";
 import router from "./router";
 import { createPinia } from "pinia";
 import { autoAnimatePlugin } from "@formkit/auto-animate/vue";
+import { VueTelegramPlugin } from "vue-tg"; // Импортируем плагин
+
 import "./style.css";
 const pinia = createPinia();
 const app = createApp(App);
@@ -10,6 +12,7 @@ const app = createApp(App);
 app.use(router); // Подключение маршрутизации
 app.use(autoAnimatePlugin); // Подключение плагина анимации
 app.use(pinia); // Подключение Pinia
+app.use(VueTelegramPlugin);
 
 console.log("Telegram API доступен:", window.Telegram);
 console.log("Telegram WebApp доступен:", window.Telegram?.WebApp);
