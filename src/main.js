@@ -14,4 +14,7 @@ app.use(autoAnimatePlugin);
 app.use(pinia);
 app.use(VueTelegramPlugin);
 
+// Отладка: проверяем, доступен ли Telegram WebApp
+console.log("Telegram WebApp доступен на старте:", window.Telegram?.WebApp);
+
 app.mount("#app");

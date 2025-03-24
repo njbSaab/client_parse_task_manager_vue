@@ -1,4 +1,4 @@
-import { ref, inject } from "vue";
+import { ref } from "vue";
 import { API_BASE_URL } from "../consts/const";
 
 export function useTelegramService() {
@@ -12,8 +12,8 @@ export function useTelegramService() {
   const isLoading = ref(true);
   const isStoredInLocalStorage = ref(false);
 
-  // Получаем Telegram API через инъекцию
-  const telegram = inject("$telegram");
+  // Пробуем получить Telegram API через window.Telegram.WebApp
+  const telegram = window.Telegram?.WebApp;
 
   // Функция для загрузки данных пользователя с сервера
   async function fetchUserFromServer(telegramId) {
@@ -80,14 +80,16 @@ export function useTelegramService() {
     }
   }
 
-  // Функция для инициализации данных из Telegram WebApp через плагин
+  // Функция для инициализации данных из Telegram WebApp
   async function initializeTelegram() {
-    if (telegram && telegram.WebApp) {
+    console.log("Telegram в сервисе:", telegram); // Отладка
+    if (telegram) {
       try {
-        telegram.WebApp.ready(); // Сообщаем Telegram, что приложение готово
-        telegram.WebApp.expand(); // Разворачиваем приложение на полный экран
+        telegram.ready(); // Сообщаем Telegram, что приложение готово
+        telegram.expand(); // Разворачиваем приложение на полный экран
 
-        const userData = telegram.WebApp.initDataUnsafe?.user;
+        const userData = telegram.initDataUnsafe?.user;
+        console.log("UserData из Telegram:", userData); // Отладка
         if (!userData || !userData.id) {
           throw new Error("Telegram ID отсутствует в данных WebApp");
         }
@@ -106,6 +108,10 @@ export function useTelegramService() {
       userNotFound.value = true;
       errorDetails.value = { message: "Telegram WebApp API не доступен" };
       isLoading.value = false;
+
+      // Временная заглушка для тестирования вне Telegram
+      console.warn("Используется заглушка для тестирования");
+      await fetchUserFromServer("123456789"); // Пример ID для теста
     }
   }
 
@@ -120,6 +126,6 @@ export function useTelegramService() {
     isLoading,
     isStoredInLocalStorage,
     fetchUserFromServer,
-    initializeTelegram, // Заменили initializeFromTelegramData
+    initializeTelegram,
   };
 }
