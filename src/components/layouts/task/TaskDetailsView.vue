@@ -2,7 +2,7 @@
   <IsLoading v-if="taskStore.isLoading" />
 
   <div v-else class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">
+    <h1 class="text-2xl font-bold flex flex-col items-center">
       Детали задачи: <span class="font-normal text-gray-500 text-sm">{{ task?.name || 'Загрузка...' }}</span>
     </h1>
 

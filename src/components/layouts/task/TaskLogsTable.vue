@@ -2,14 +2,14 @@
     <div v-if="logs?.length" class="mt-4">
       <h2 class="text-xl font-semibold mb-3">Логи задачи</h2>
       <label class="mr-2 text-sm text-slate-500">Логов на странице:</label>
-      <select v-model="itemsPerPage" class="border rounded p-1 text-sm">
+      <select v-model="itemsPerPage" class="border rounded p-1 text-sm bg-white mb-3">
         <option :value="5">5</option>
         <option :value="10">10</option>
         <option :value="20">20</option>
       </select>
   
       <!-- Таблица -->
-      <div class="relative flex flex-col w-full h-full text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
+      <div class="relative flex flex-col w-full h-full text-gray-700 bg-white shadow-md rounded-lg bg-clip-border overflow-hidden overflow-x-auto">
         <table class="w-full text-left table-auto min-w-max">
           <thead>
             <tr>
