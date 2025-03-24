@@ -1,5 +1,7 @@
 <template>
-  <div class="container mx-auto p-4">
+  <IsLoading v-if="taskStore.isLoading" />
+
+  <div  v-else class="container mx-auto p-4">
     <h1 class="text-2xl font-bold mb-4">Детали задачи: {{ task?.name || 'Загрузка...' }}</h1>
 
     <div v-if="task" class="bg-white shadow-lg rounded-lg p-6">
@@ -43,6 +45,7 @@
 </template>
 
 <script setup>
+import IsLoading from "@/components/ui/isLoading.vue";
 import { onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useTaskStore } from '../../../stores/taskStore';
