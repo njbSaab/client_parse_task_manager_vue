@@ -1,7 +1,7 @@
 <template>
   <IsLoading v-if="taskStore.isLoading" />
 
-  <div v-else class="container mx-auto p-4">
+  <div v-else class="container mx-auto py-4 px-2">
     <h1 class="text-2xl font-bold flex flex-col items-center">
       Детали задачи:
       <span class="font-normal text-gray-500 text-sm">{{
@@ -60,7 +60,7 @@
         <strong>Статус:</strong> <span class="text-green-500">Ok</span>
       </p>
 
-      <div class="px-1 w-full">
+      <div class="w-full">
         <TaskLogsTable :logs="taskLogs[taskId] || []" />
       </div>
     </div>
