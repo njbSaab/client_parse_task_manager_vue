@@ -1,6 +1,6 @@
 <template>
     <div v-if="logs?.length" class="mt-4 w-full">
-      <div class="title-group flex items-center justify-between pb-2 w-[92%]">
+      <div class="title-group flex items-center justify-between pb-2 w-[92%] mx-auto">
         <h2 class="text-xl font-semibold">Логи задачи</h2>
         <div class="flex items-center">
           <label class="mr-2 text-sm text-slate-500">Логов на странице:</label>
@@ -13,7 +13,7 @@
   
       <!-- Таблица -->
       <div class="relative flex flex-col w-full h-full text-gray-700 bg-white shadow-md rounded-lg bg-clip-border overflow-hidden overflow-x-auto">
-        <table class="w-full text-left table-auto min-w-max mb-[60px]">
+        <table class="w-full text-left table-auto min-w-max">
           <thead>
             <tr>
               <th class="p-4 border-b border-slate-200 bg-slate-50 cursor-pointer" @click="sortBy('id')">
@@ -67,7 +67,7 @@
         </table>
   
         <!-- Пагинация -->
-        <div class="flex justify-between items-center px-4 py-3 fixed w-[90%] bottom-[55px]">
+        <div class="flex justify-between items-center px-4 py-3 w-[90%] mx-auto">
           <div class="text-sm text-slate-500">
             Showing <b>{{ startIndex + 1 }}-{{ endIndex }}</b> of {{ totalLogs }}
           </div>
