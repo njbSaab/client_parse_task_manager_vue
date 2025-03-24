@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">Детали задачи: {{ task?.name }}</h1>
+    <h1 class="text-2xl font-bold mb-4">Детали задачи: {{ task?.name || 'Загрузка...' }}</h1>
 
     <div v-if="task" class="bg-white shadow-lg rounded-lg p-6">
       <p><strong>ID:</strong> {{ task.id }}</p>
@@ -8,8 +8,8 @@
       <p><strong>URL:</strong> {{ task.url }}</p>
       <p><strong>Содержимое:</strong> {{ task.content }}</p>
       <p><strong>Интервал:</strong> {{ task.interval }}</p>
-      <p><strong>Частота:</strong> {{ task.frequency }}</p>
-      <p><strong>Период:</strong> {{ task.period }}</p>
+      <p><strong>Частота:</strong> {{ task.frequency || 'Не указано' }}</p>
+      <p><strong>Период:</strong> {{ task.period || 'Не указано' }}</p>
       <p><strong>Дата создания:</strong> {{ task.created_at }}</p>
       <p><strong>Статус:</strong> <span class="text-green-500">Ok</span></p>
 
@@ -43,26 +43,39 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
-import { useRoute } from "vue-router";
-import { useTaskStore } from "../../../stores/taskStore";
+import { onMounted, computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { useTaskStore } from '../../../stores/taskStore';
 
 const route = useRoute();
 const taskStore = useTaskStore();
 
 const taskId = route.params.id;
 
+// Вычисляемые свойства для удобства доступа
+const task = computed(() => taskStore.selectedTask);
+const taskLogs = computed(() => taskStore.taskLogs);
+const isLoading = computed(() => taskStore.isLoading);
+const error = computed(() => taskStore.error);
+
 onMounted(async () => {
-  // Загружаем задачи, если их ещё нет
-  if (!taskStore.tasks.length) {
-    await taskStore.loadTasks();
-  }
-  // Устанавливаем выбранную задачу
-  const selectedTask = taskStore.tasks.find((t) => t.id == taskId);
-  if (selectedTask) {
-    taskStore.selectTask(selectedTask);
-    // Загружаем логи для этой задачи
-    await taskStore.loadTaskLogs(taskId);
+  try {
+    // Загружаем задачи, если их ещё нет
+    if (!taskStore.tasks.length) {
+      await taskStore.loadTasks();
+    }
+    // Устанавливаем выбранную задачу (приводим taskId к числу для корректного сравнения)
+    const selectedTask = taskStore.tasks.find((t) => t.id === Number(taskId));
+    if (selectedTask) {
+      taskStore.selectTask(selectedTask);
+      // Загружаем логи для этой задачи
+      await taskStore.loadTaskLogs(taskId);
+    } else {
+      taskStore.error = `Задача с ID ${taskId} не найдена`;
+    }
+  } catch (err) {
+    taskStore.error = err.message || 'Неизвестная ошибка при загрузке данных';
+    console.error('Ошибка в onMounted:', err);
   }
 });
 </script>

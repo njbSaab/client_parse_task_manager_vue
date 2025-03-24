@@ -14,9 +14,10 @@ const routes = [
     component: () => import("../components/ui/RaportTable.vue"),
   },
   {
-    path: "/tasks",
-    name: "report",
+    path: "/task/:id",
+    name: "TaskDetails",
     component: () => import("../components/layouts/task/TaskDetailsView.vue"),
+    props: true,
   },
 ];
 

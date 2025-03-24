@@ -15,6 +15,7 @@ export const useTaskStore = defineStore("taskStore", {
       this.error = null;
       try {
         const data = await fetchTasks();
+        console.log("Данные от fetchTasks:", data); // Логируем сырые данные
         if (!Array.isArray(data)) {
           throw new Error("Сервер вернул данные, не являющиеся массивом");
         }
@@ -25,7 +26,7 @@ export const useTaskStore = defineStore("taskStore", {
             : "Неизвестно",
         }));
         this.selectedTask = this.tasks.length > 0 ? this.tasks[0] : null;
-        console.log("Загруженные задачи:", this.tasks);
+        console.log("Обработанные задачи:", this.tasks);
       } catch (error) {
         if (
           error.message ===
@@ -43,10 +44,14 @@ export const useTaskStore = defineStore("taskStore", {
     },
     selectTask(task) {
       this.selectedTask = task;
+      console.log("Выбрана задача:", task);
     },
     async loadTaskLogs(taskId) {
       if (this.taskLogs[taskId]) {
-        console.log(`Логи для задачи ${taskId} уже загружены.`);
+        console.log(
+          `Логи для задачи ${taskId} уже загружены:`,
+          this.taskLogs[taskId]
+        );
         return;
       }
       try {
@@ -55,6 +60,7 @@ export const useTaskStore = defineStore("taskStore", {
         this.taskLogs[taskId] = logs;
       } catch (error) {
         console.error(`Ошибка при загрузке логов задачи ${taskId}:`, error);
+        this.error = error.message || "Ошибка при загрузке логов";
       }
     },
   },
