@@ -23,6 +23,7 @@ onMounted(() => {
       }
       serverResponse.value = { telegramData: userData };
       fetchUserFromServer(userData.id);
+      console.log("userData", userData);
     } catch (error) {
       userNotFound.value = true;
       errorDetails.value = {

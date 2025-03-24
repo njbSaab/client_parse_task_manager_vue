@@ -13,6 +13,11 @@ const routes = [
     name: "report",
     component: () => import("../components/ui/RaportTable.vue"),
   },
+  {
+    path: "/tasks",
+    name: "report",
+    component: () => import("../components/layouts/task/TaskDetailsView.vue"),
+  },
 ];
 
 const router = createRouter({
