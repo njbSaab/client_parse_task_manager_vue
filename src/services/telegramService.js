@@ -1,6 +1,8 @@
 import { ref } from "vue";
+import { API_BASE_URL } from "../consts/const";
 
-export function useUser() {
+// Состояние, которое будет возвращаться из сервиса
+export function useTelegramService() {
   const telegramUser = ref(null);
   const serverResponse = ref(null);
   const userNotFound = ref(false);
@@ -11,12 +13,12 @@ export function useUser() {
   const isLoading = ref(true);
   const isStoredInLocalStorage = ref(false);
 
+  // Функция для загрузки данных пользователя с сервера
   async function fetchUserFromServer(telegramId) {
     telegramIdType.value = typeof telegramId;
     telegramIdValue.value = String(telegramId);
-    const requestUrl = `${import.meta.env.VITE_API_BASE_URL}/users/${
-      telegramIdValue.value
-    }`;
+
+    const requestUrl = `${API_BASE_URL}/users/${telegramIdValue.value}`;
     serverRequestDetails.value = {
       url: requestUrl,
       telegramId: telegramIdValue.value,
@@ -28,7 +30,7 @@ export function useUser() {
         method: "GET",
         headers: {
           Accept: "application/json",
-          "ngrok-skip-browser-warning": "true", // Обход предупреждения ngrok
+          "ngrok-skip-browser-warning": "true",
         },
       });
 
@@ -76,6 +78,35 @@ export function useUser() {
     }
   }
 
+  // Функция для инициализации данных из URL
+  async function initializeFromTelegramData() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tgWebAppData = urlParams.get("tgWebAppData");
+
+    if (tgWebAppData) {
+      try {
+        const userData = JSON.parse(decodeURIComponent(tgWebAppData));
+        if (!userData.id) {
+          throw new Error("Telegram ID отсутствует в данных");
+        }
+
+        serverResponse.value = { telegramData: userData };
+        await fetchUserFromServer(userData.id);
+      } catch (error) {
+        userNotFound.value = true;
+        errorDetails.value = {
+          message: "Ошибка при обработке tgWebAppData",
+          details: error.message,
+        };
+        isLoading.value = false;
+      }
+    } else {
+      userNotFound.value = true;
+      errorDetails.value = { message: "tgWebAppData отсутствует в URL" };
+      isLoading.value = false;
+    }
+  }
+
   return {
     telegramUser,
     serverResponse,
@@ -87,5 +118,6 @@ export function useUser() {
     isLoading,
     isStoredInLocalStorage,
     fetchUserFromServer,
+    initializeFromTelegramData,
   };
 }

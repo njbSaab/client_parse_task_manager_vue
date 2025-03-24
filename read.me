@@ -1,127 +1,7 @@
-src/
-├── assets/          # Статические файлы
-│   └── vue.svg
-├── components/      # Общие компоненты
-│   ├── layout/
-│   │   └── TabsLayout.vue
-│   ├── ui/          # Компоненты пользовательского интерфейса
-│   │   ├── AccordionSearch.vue
-│   │   ├── BtnSearch.vue
-│   │   ├── CardSearch.vue
-│   │   ├── InputSearch.vue
-│   │   ├── RaportTable.vue
-│   │   ├── SelectSearch.vue
-│   │   └── TextSearch.vue
-│   └── task/
-│       ├── TaskForm.vue
-│       ├── TaskList.vue
-│       └── TaskReport.vue
-├── composables/     # Логика для повторного использования
-│   └── useTabs.js
-├── views/           # Страницы приложения
-│   ├── HomeView.vue
-│   └── TaskManagerView.vue
-├── router/          # Маршрутизация
-│   └── index.js
-├── App.vue          # Корневой компонент
-└── main.js          # Точка входа
-
-
-
-
-
-
+//app.vue
 <script setup>
 import { ref, onMounted } from "vue";
-
-const telegramUser = ref(null);
-
-async function saveUserDataToServer(userData) {
-  try {
-    const response = await 
-    fetch("http://localhost:3082/api/users/save", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify(userData),
-})
-  .then((response) => response.json())
-  .then((data) => {
-    if (data.success) {
-      console.log("Пользователь успешно сохранен:", data.user);
-    } else {
-      console.error("Ошибка при сохранении пользователя:", data.error);
-    }
-  })
-  .catch((error) => console.error("Ошибка запроса:", error));
-  } catch (error) {
-    console.error("Ошибка при отправке данных на сервер:", error);
-  }
-} 
-
-onMounted(() => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const tgWebAppData = urlParams.get("tgWebAppData");
-
-  if (tgWebAppData) {
-    try {
-      const userData = JSON.parse(decodeURIComponent(tgWebAppData));
-      console.log("Данные пользователя из tgWebAppData:", userData);
-
-      // Сохраняем в localStorage
-      localStorage.setItem("telegram_user", JSON.stringify(userData));
-      telegramUser.value = userData;
-
-      // Отправляем данные на сервер
-      saveUserDataToServer(userData);
-    } catch (error) {
-      console.error("Ошибка при парсинге tgWebAppData:", error);
-    }
-  } else {
-    const localData = localStorage.getItem("telegram_user");
-    if (localData) {
-      try {
-        telegramUser.value = JSON.parse(localData);
-        console.log("Данные из localStorage:", telegramUser.value);
-      } catch (error) {
-        console.error("Ошибка при чтении данных из localStorage:", error);
-        localStorage.removeItem("telegram_user");
-      }
-    } else {
-      console.warn("tgWebAppData отсутствует, и localStorage пустой.");
-    }
-  }
-});
-</script>
-
-<template>
-  <div class="app-container" v-auto-animate>
-    <h1 class="text-xl font-bold text-center my-4">
-      <span v-if="telegramUser">
-         <span class="text-lg font-normal">👋 Добро пожаловать в </span>
-         Task Manager
-       <span class="block">  {{ telegramUser.first_name }} 🚀 </span>
-      </span>
-      <span v-else> Пожалуйста, войдите через Telegram для доступа к приложению.</span> 
-    </h1>
-    <RouterView />
-  </div>
-</template>
-
-<style scoped>
-.app-container {
-  max-width: 800px;
-  margin: 0 auto;
-}
-</style>
-
-
-
-
-
-<script setup>
-import { ref, onMounted } from "vue";
+import { API_BASE_URL } from "./consts/const";
 
 const telegramUser = ref(null); // Данные пользователя
 const serverResponse = ref(null); // Ответ от сервера
@@ -131,13 +11,13 @@ const telegramIdType = ref(""); // Тип данных telegramId
 const telegramIdValue = ref(""); // Значение telegramId
 const serverRequestDetails = ref(null); // Детали запроса
 const isLoading = ref(true); // Флаг загрузки данных
+const isStoredInLocalStorage = ref(false); // Флаг успешной записи в localStorage
 
 async function fetchUserFromServer(telegramId) {
   telegramIdType.value = typeof telegramId;
   telegramIdValue.value = String(telegramId); // Преобразуем в строку
-  console.log('start',telegramIdValue.value);
-  
-  const requestUrl = `https://095d-176-37-193-72.ngrok-free.app/api/users/${telegramIdValue.value}`;
+
+  const requestUrl = `${API_BASE_URL}/users/${telegramIdValue.value}`;
   serverRequestDetails.value = { url: requestUrl, telegramId: telegramIdValue.value };
   isLoading.value = true;
 
@@ -145,13 +25,10 @@ async function fetchUserFromServer(telegramId) {
     const response = await fetch(requestUrl, {
       method: "GET",
       headers: {
-        "Accept": "application/json",
+        Accept: "application/json",
         "ngrok-skip-browser-warning": "true", // Устранение предупреждения ngrok
       },
     });
-
-    // Логируем ответ для отладки
-    console.log(`HTTP ${response.status}: ${response.statusText}`);
 
     serverResponse.value = {
       status: response.status,
@@ -159,24 +36,24 @@ async function fetchUserFromServer(telegramId) {
       requestUrl,
     };
 
-    // Проверяем статус ответа
     if (!response.ok) {
-      throw new Error(`HTTP ошибка: ${response.status} ${response.statusText}`);
+      throw new Error( `HTTP ошибка:${response.status} ${response.statusText}`);
     }
 
-    // Проверяем тип контента
     const contentType = response.headers.get("content-type");
     if (!contentType || !contentType.includes("application/json")) {
       throw new Error("Ответ сервера не является JSON");
     }
 
-    // Парсим ответ
     const data = await response.json();
     serverResponse.value.data = data;
 
-    // Проверяем успешность ответа
     if (data.success) {
-      telegramUser.value = data.user; // Сохраняем данные пользователя
+      telegramUser.value = data.user;
+
+      // Записываем данные в localStorage
+      localStorage.setItem("telegram_user", JSON.stringify(data.user));
+      isStoredInLocalStorage.value = true; // Флаг успешной записи
     } else {
       userNotFound.value = true;
       errorDetails.value = {
@@ -185,7 +62,6 @@ async function fetchUserFromServer(telegramId) {
       };
     }
   } catch (error) {
-    // Обрабатываем ошибки
     userNotFound.value = true;
     errorDetails.value = {
       message: "Ошибка при запросе к серверу",
@@ -193,17 +69,15 @@ async function fetchUserFromServer(telegramId) {
       telegramId: telegramIdValue.value,
       requestUrl,
     };
-    console.error("Ошибка запроса:", error);
   } finally {
-    // Убираем состояние загрузки
     isLoading.value = false;
   }
 }
+
 onMounted(() => {
   const urlParams = new URLSearchParams(window.location.search);
   const tgWebAppData = urlParams.get("tgWebAppData");
-  console.log('onMounted',telegramIdValue.value);
-  
+
   if (tgWebAppData) {
     try {
       const userData = JSON.parse(decodeURIComponent(tgWebAppData));
@@ -211,8 +85,8 @@ onMounted(() => {
         throw new Error("Telegram ID отсутствует в данных");
       }
 
-      serverResponse.value = { telegramData: userData }; // Данные Telegram
-      fetchUserFromServer(userData.id); // Проверяем пользователя на сервере
+      serverResponse.value = { telegramData: userData };
+      fetchUserFromServer(userData.id);
     } catch (error) {
       userNotFound.value = true;
       errorDetails.value = {
@@ -230,7 +104,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="app-container" v-auto-animate>
+  <div class="app-container bg-white h-full">
     <!-- Приветствие, если пользователь найден -->
     <h1 class="text-xl font-bold text-center my-4">
       <span v-if="telegramUser">
@@ -238,13 +112,18 @@ onMounted(() => {
         Task Manager
         <span class="block"> {{ telegramUser.first_name }} 🚀 </span>
       </span>
-      
-      <!-- Сообщение, если пользователь не найден -->
-      <span v-else>
-        Пожалуйста, войдите через Telegram для доступа к приложению.
-      </span>
+      <span v-else> Пожалуйста, войдите через Telegram для доступа к приложению. </span>
     </h1>
-    
+
+    <!-- Проверка записи в localStorage -->
+    <!-- <div v-if="isStoredInLocalStorage" class="text-green-500 text-center">
+      Данные успешно записаны в localStorage! 🚀
+    </div> -->
+
+    <!-- <div v-if="!isLoading && telegramUser" class="text-red-500 text-center">
+      Не удалось записать данные в localStorage.
+    </div> -->
+
     <!-- Вывод контента на основе роутов -->
     <RouterView />
   </div>
@@ -256,182 +135,3 @@ onMounted(() => {
   margin: 0 auto;
 }
 </style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//formStore
-import { defineStore } from "pinia";
-import { createTask, fetchTasks, fetchTaskLogs } from "../services/apiService";
-
-export const useFormStore = defineStore("form", {
-  state: () => ({
-    formData: {
-      url: "",
-      content: "",
-      interval: "",
-      frequency: 1,
-      period: "Час",
-      userId: null,
-    },
-    tasks: [], // Список задач
-    taskLogs: {}, // Логи задач
-    selectedTask: null, // Выбранная задача
-    notification: {
-      isVisible: false,
-      type: "success",
-    },
-    isSubmitting: false, // Флаг предотвращения повторной отправки
-    isLoading: false, // Флаг загрузки задач
-    error: null, // Ошибка при загрузке
-  }),
-  actions: {
-    calculateInterval() {
-      const periodMap = {
-        Час: 60,
-        День: 1440,
-        Неделя: 10080,
-        Месяц: 43200,
-      };
-
-      if (!this.formData.frequency || !periodMap[this.formData.period]) {
-        console.error("Неверные данные для расчета интервала:", this.formData);
-        return "0m"; // Возвращаем значение по умолчанию
-      }
-
-      const totalMinutes =
-        periodMap[this.formData.period] / this.formData.frequency;
-      const interval = `${Math.round(totalMinutes)}m`;
-      console.log("Рассчитанный интервал:", interval);
-      return interval;
-    },
-    async submitForm() {
-      if (this.isSubmitting) {
-        console.warn("Попытка повторной отправки задачи");
-        return;
-      }
-      this.isSubmitting = true;
-
-      try {
-        console.log("Форма отправляется...");
-
-        // Получаем Telegram данные из localStorage
-        const telegramUser = JSON.parse(localStorage.getItem("telegram_user"));
-
-        if (!telegramUser?.telegram_id) {
-          throw new Error(
-            "Ошибка: Не удалось получить telegram_id из localStorage"
-          );
-        }
-
-        // Устанавливаем telegram_id как userId
-        this.formData.userId = telegramUser.telegram_id; // Используем telegram_id
-
-        // Рассчитываем интервал
-        this.formData.interval = this.calculateInterval();
-
-        // Обрезаем name до третьего слэша
-        const parsedUrl = new URL(this.formData.url);
-        const trimmedName = `${parsedUrl.protocol}//${parsedUrl.host}/`; // Формируем нужную часть
-        console.log("Обрезанное имя:", trimmedName);
-
-        // Подготавливаем данные для отправки
-        const cleanFormData = {
-          ...this.formData, // Копируем данные из формы
-          userId: telegramUser.telegram_id, // Убедимся, что ID передается как строка
-          name: trimmedName, // Используем обрезанное значение
-        };
-
-        console.log("Чистый объект для отправки на сервер:", cleanFormData);
-
-        // Отправляем запрос на создание задачи
-        const response = await createTask(cleanFormData);
-
-        console.log("Ответ от сервера:", response);
-
-        // Показываем уведомление об успешном создании задачи
-        this.notification.isVisible = true;
-        this.notification.type = "success";
-
-        // Обновляем список задач
-        await this.loadTasks();
-      } catch (error) {
-        console.error("Ошибка при создании задачи:", error);
-
-        // Показываем уведомление об ошибке
-        this.notification.isVisible = true;
-        this.notification.type = "error";
-      } finally {
-        this.isSubmitting = false;
-
-        // Скрываем уведомление через 3 секунды
-        setTimeout(() => {
-          this.notification.isVisible = false;
-        }, 3000);
-      }
-    },
-    async loadTasks() {
-      this.isLoading = true;
-      this.error = null;
-
-      try {
-        const data = await fetchTasks();
-
-        if (!Array.isArray(data)) {
-          throw new Error("Сервер вернул данные, не являющиеся массивом");
-        }
-
-        this.tasks = data.map((task) => ({
-          ...task,
-          created_at: task.created_at
-            ? new Date(task.created_at).toLocaleString()
-            : "Неизвестно",
-        }));
-
-        this.selectedTask = this.tasks.length > 0 ? this.tasks[0] : null;
-        console.log("Загруженные задачи:", this.tasks);
-      } catch (error) {
-        if (
-          error.message ===
-          "У вас нет задач. Вам нужно перейти в новую задачу и создать."
-        ) {
-          console.warn(error.message);
-          this.tasks = [];
-        } else {
-          this.error = error.message || "Ошибка при загрузке задач";
-          console.error("Ошибка при загрузке задач:", error);
-        }
-      } finally {
-        this.isLoading = false;
-      }
-    },
-    selectTask(task) {
-      this.selectedTask = task;
-    },
-    async loadTaskLogs(taskId) {
-      if (this.taskLogs[taskId]) {
-        console.log(`Логи для задачи ${taskId} уже загружены.`);
-        return; // Избегаем повторного запроса
-      }
-      try {
-        const logs = await fetchTaskLogs(taskId);
-        console.log(`Загруженные логи для задачи ${taskId}:`, logs);
-
-        this.taskLogs[taskId] = logs;
-      } catch (error) {
-        console.error(`Ошибка при загрузке логов задачи ${taskId}:`, error);
-      }
-    },
-  },
-});
-
