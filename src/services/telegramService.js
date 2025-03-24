@@ -1,7 +1,6 @@
-import { ref } from "vue";
+import { ref, inject } from "vue";
 import { API_BASE_URL } from "../consts/const";
 
-// Состояние, которое будет возвращаться из сервиса
 export function useTelegramService() {
   const telegramUser = ref(null);
   const serverResponse = ref(null);
@@ -12,6 +11,9 @@ export function useTelegramService() {
   const serverRequestDetails = ref(null);
   const isLoading = ref(true);
   const isStoredInLocalStorage = ref(false);
+
+  // Получаем Telegram API через инъекцию
+  const telegram = inject("$telegram");
 
   // Функция для загрузки данных пользователя с сервера
   async function fetchUserFromServer(telegramId) {
@@ -78,16 +80,16 @@ export function useTelegramService() {
     }
   }
 
-  // Функция для инициализации данных из URL
-  async function initializeFromTelegramData() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const tgWebAppData = urlParams.get("tgWebAppData");
-
-    if (tgWebAppData) {
+  // Функция для инициализации данных из Telegram WebApp через плагин
+  async function initializeTelegram() {
+    if (telegram && telegram.WebApp) {
       try {
-        const userData = JSON.parse(decodeURIComponent(tgWebAppData));
-        if (!userData.id) {
-          throw new Error("Telegram ID отсутствует в данных");
+        telegram.WebApp.ready(); // Сообщаем Telegram, что приложение готово
+        telegram.WebApp.expand(); // Разворачиваем приложение на полный экран
+
+        const userData = telegram.WebApp.initDataUnsafe?.user;
+        if (!userData || !userData.id) {
+          throw new Error("Telegram ID отсутствует в данных WebApp");
         }
 
         serverResponse.value = { telegramData: userData };
@@ -95,14 +97,14 @@ export function useTelegramService() {
       } catch (error) {
         userNotFound.value = true;
         errorDetails.value = {
-          message: "Ошибка при обработке tgWebAppData",
+          message: "Ошибка при инициализации Telegram WebApp",
           details: error.message,
         };
         isLoading.value = false;
       }
     } else {
       userNotFound.value = true;
-      errorDetails.value = { message: "tgWebAppData отсутствует в URL" };
+      errorDetails.value = { message: "Telegram WebApp API не доступен" };
       isLoading.value = false;
     }
   }
@@ -118,6 +120,6 @@ export function useTelegramService() {
     isLoading,
     isStoredInLocalStorage,
     fetchUserFromServer,
-    initializeFromTelegramData,
+    initializeTelegram, // Заменили initializeFromTelegramData
   };
 }
