@@ -1,4 +1,3 @@
-// src/composables/useUser.js
 import { ref } from "vue";
 
 export function useUser() {

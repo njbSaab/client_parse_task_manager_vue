@@ -9,11 +9,11 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
-  base: "/", // Указывает базовый путь для проекта
+  base: "/",
   build: {
-    outDir: "dist", // Каталог сборки
+    outDir: "dist",
   },
   server: {
-    port: 5173, // Локальный порт разработки
+    port: 5173,
   },
 });

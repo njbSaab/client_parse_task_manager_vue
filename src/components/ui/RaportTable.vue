@@ -1,9 +1,7 @@
 <template>
   <div class="relative" v-auto-animate>
-    <!-- Состояние загрузки -->
     <IsLoading v-if="formStore.isLoading" />
 
-    <!-- Ошибка -->
     <div v-else-if="formStore.error">
       <div v-if="formStore.tasks.length === 0" class="message-info bg-slate-50">
        <span class="block font-bold">У вас пока нет отчетов.</span>  Вам нужно перейти и создать
@@ -15,6 +13,7 @@
         </router-link>
       </div>
     </div>
+    
     <!-- Таблица задач -->
     <div
       v-else

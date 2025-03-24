@@ -31,24 +31,20 @@ const { formData } = useFormStore();
 const textareaRef = ref(null);
 const isFocused = ref(false);
 
-// Фокус на textarea при клике на label
 const focusTextarea = () => {
   textareaRef.value?.focus();
 };
 
-// Обработчик события фокуса
 const handleFocus = () => {
   isFocused.value = true;
 };
 
-// Обработчик события потери фокуса
 const handleBlur = () => {
   isFocused.value = false;
 };
 </script>
 
 <style scoped>
-/* Стили для метки */
 label {
   cursor: text;
 }

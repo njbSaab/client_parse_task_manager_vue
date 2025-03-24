@@ -1,4 +1,3 @@
-//views/TaskManagerView.vue
 <script setup>
 import TabsLayout from "@/components/layouts/TabsLayout.vue";
 import AccordionSearch from "@/components/ui/AccordionSearch.vue";

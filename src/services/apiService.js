@@ -23,7 +23,6 @@ export const createTask = async (taskData) => {
     throw error.response?.data || { error: "Неизвестная ошибка" };
   }
 };
-
 // export const fetchTasks = async () => {
 //   try {
 //     const response = await axios.get(`${API_BASE_URL}/tasks`, {
@@ -39,7 +38,6 @@ export const createTask = async (taskData) => {
 //     throw error.response?.data || { error: "Неизвестная ошибка" };
 //   }
 // };
-
 export const fetchTasks = async () => {
   try {
     const telegramUser = JSON.parse(localStorage.getItem("telegram_user"));
@@ -67,7 +65,6 @@ export const fetchTasks = async () => {
     throw error.response?.data || { error: "Неизвестная ошибка" };
   }
 };
-
 export const fetchTaskLogs = async (taskId) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/tasks/${taskId}/logs`, {

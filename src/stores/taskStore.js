@@ -1,14 +1,13 @@
-// stores/taskStore.js
 import { defineStore } from "pinia";
 import { fetchTasks, fetchTaskLogs } from "../services/apiService";
 
 export const useTaskStore = defineStore("taskStore", {
   state: () => ({
-    tasks: [], // Список задач
-    taskLogs: {}, // Логи задач
-    selectedTask: null, // Выбранная задача
-    isLoading: false, // Флаг загрузки
-    error: null, // Ошибка при загрузке
+    tasks: [],
+    taskLogs: {},
+    selectedTask: null,
+    isLoading: false,
+    error: null,
   }),
   actions: {
     async loadTasks() {

@@ -11,16 +11,16 @@ export const useFormStore = defineStore("form", {
       period: "Час",
       userId: null,
     },
-    tasks: [], // Список задач
-    taskLogs: {}, // Логи задач
-    selectedTask: null, // Выбранная задача
+    tasks: [],
+    taskLogs: {},
+    selectedTask: null,
     notification: {
       isVisible: false,
       type: "success",
     },
-    isSubmitting: false, // Флаг предотвращения повторной отправки
-    isLoading: false, // Флаг загрузки задач
-    error: null, // Ошибка при загрузке
+    isSubmitting: false,
+    isLoading: false,
+    error: null,
   }),
   actions: {
     calculateInterval() {
@@ -33,7 +33,7 @@ export const useFormStore = defineStore("form", {
 
       if (!this.formData.frequency || !periodMap[this.formData.period]) {
         console.error("Неверные данные для расчета интервала:", this.formData);
-        return "0m"; // Возвращаем значение по умолчанию
+        return "0m";
       }
 
       const totalMinutes =

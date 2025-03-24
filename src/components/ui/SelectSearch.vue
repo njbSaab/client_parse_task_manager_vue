@@ -2,20 +2,16 @@
   <div class="flex flex-col space-y-4 w-[95%] md:max-w-sm md:min-w-[80%] mx-auto">
     <span>Выберите сколько раз в (час, день, неделю, месяц) выполнить поиск</span>
 
-    <!-- Списки -->
     <Dropdown :items="firstItems" v-model="selectedFirstItem" />
     <Dropdown :items="secondItems" v-model="selectedSecondItem" />
 
-    <!-- Динамический текст -->
     <span>
       Выполнить <strong>{{ selectedFirstItem?.label || "..." }}</strong> поиск(а) в
       <strong>{{ selectedSecondItem?.label || "..." }}</strong>
     </span>
 
-    <!-- Кнопка отправки -->
     <BtnSearch @click="handleSubmit" />
 
-    <!-- Уведомление -->
     <PopoverIsSuccess />
 
     <!-- Логи запросов -->
@@ -51,10 +47,9 @@ import BtnSearch from "./BtnSearch.vue";
 import PopoverIsSuccess from "./PopoverIsSuccess.vue";
 
 const formStore = useFormStore();
-const logs = ref([]); // Массив для хранения логов
-const telegramUserFromStorage = ref(null); // Telegram данные из localStorage
+const logs = ref([]); 
+const telegramUserFromStorage = ref(null); 
 
-// Данные для выпадающих списков
 const firstItems = ref([
   { id: 1, label: "1" },
   { id: 2, label: "2" },
@@ -72,7 +67,6 @@ const secondItems = ref([
 const selectedFirstItem = ref(firstItems.value[0]);
 const selectedSecondItem = ref(secondItems.value[0]);
 
-// Слушаем изменения в выпадающих списках
 watch([selectedFirstItem, selectedSecondItem], ([first, second]) => {
   const periodMap = {
     Час: 60,
@@ -96,7 +90,6 @@ const handleSubmit = async () => {
     console.log("Кнопка нажата...");
     await formStore.submitForm();
 
-    // Добавляем успешный лог
     logs.value.push({
       request: JSON.stringify(formStore.formData),
       response: "Задача успешно создана",
@@ -105,7 +98,6 @@ const handleSubmit = async () => {
   } catch (error) {
     console.error("Ошибка при создании задачи:", error);
 
-    // Добавляем лог ошибки
     logs.value.push({
       request: JSON.stringify(formStore.formData),
       response: error.message || "Неизвестная ошибка",
@@ -114,7 +106,6 @@ const handleSubmit = async () => {
   }
 };
 
-// Загружаем данные из localStorage при монтировании компонента
 onMounted(() => {
   try {
     const storedUser = localStorage.getItem("telegram_user");
