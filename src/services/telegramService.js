@@ -12,8 +12,26 @@ export function useTelegramService() {
   const isLoading = ref(true);
   const isStoredInLocalStorage = ref(false);
 
-  // Пробуем получить Telegram API через window.Telegram.WebApp
-  const telegram = window.Telegram?.WebApp;
+  // Функция для ожидания Telegram WebApp
+  async function waitForTelegramWebApp() {
+    return new Promise((resolve, reject) => {
+      if (window.Telegram?.WebApp) {
+        resolve(window.Telegram.WebApp);
+      } else {
+        const interval = setInterval(() => {
+          if (window.Telegram?.WebApp) {
+            clearInterval(interval);
+            resolve(window.Telegram.WebApp);
+          }
+        }, 100);
+        // Тайм-аут 5 секунд
+        setTimeout(() => {
+          clearInterval(interval);
+          reject(new Error("Telegram WebApp не загрузился вовремя"));
+        }, 5000);
+      }
+    });
+  }
 
   // Функция для загрузки данных пользователя с сервера
   async function fetchUserFromServer(telegramId) {
@@ -82,36 +100,29 @@ export function useTelegramService() {
 
   // Функция для инициализации данных из Telegram WebApp
   async function initializeTelegram() {
-    console.log("Telegram в сервисе:", telegram); // Отладка
-    if (telegram) {
-      try {
-        telegram.ready(); // Сообщаем Telegram, что приложение готово
-        telegram.expand(); // Разворачиваем приложение на полный экран
+    try {
+      const telegram = await waitForTelegramWebApp(); // Ждём готовности Telegram WebApp
+      console.log("Telegram WebApp инициализирован:", telegram);
 
-        const userData = telegram.initDataUnsafe?.user;
-        console.log("UserData из Telegram:", userData); // Отладка
-        if (!userData || !userData.id) {
-          throw new Error("Telegram ID отсутствует в данных WebApp");
-        }
+      telegram.ready(); // Сообщаем Telegram, что приложение готово
+      telegram.expand(); // Разворачиваем приложение на полный экран
 
-        serverResponse.value = { telegramData: userData };
-        await fetchUserFromServer(userData.id);
-      } catch (error) {
-        userNotFound.value = true;
-        errorDetails.value = {
-          message: "Ошибка при инициализации Telegram WebApp",
-          details: error.message,
-        };
-        isLoading.value = false;
+      const userData = telegram.initDataUnsafe?.user;
+      console.log("UserData из Telegram:", userData);
+
+      if (!userData || !userData.id) {
+        throw new Error("Telegram ID отсутствует в данных WebApp");
       }
-    } else {
-      userNotFound.value = true;
-      errorDetails.value = { message: "Telegram WebApp API не доступен" };
-      isLoading.value = false;
 
-      // Временная заглушка для тестирования вне Telegram
-      console.warn("Используется заглушка для тестирования");
-      await fetchUserFromServer("123456789"); // Пример ID для теста
+      serverResponse.value = { telegramData: userData };
+      await fetchUserFromServer(userData.id);
+    } catch (error) {
+      userNotFound.value = true;
+      errorDetails.value = {
+        message: "Ошибка при инициализации Telegram WebApp",
+        details: error.message,
+      };
+      isLoading.value = false;
     }
   }
 
