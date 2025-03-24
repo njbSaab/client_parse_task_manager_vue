@@ -1,8 +1,10 @@
 <template>
   <IsLoading v-if="taskStore.isLoading" />
 
-  <div  v-else class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">Детали задачи: <span class="font-normal text-gray-500 text-sm">{{ task?.name || 'Загрузка...' }}</span> </h1>
+  <div v-else class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">
+      Детали задачи: <span class="font-normal text-gray-500 text-sm">{{ task?.name || 'Загрузка...' }}</span>
+    </h1>
 
     <div v-if="task" class="bg-white shadow-lg rounded-lg p-6">
       <p><strong>ID:</strong> {{ task.id }}</p>
@@ -15,36 +17,31 @@
       <p><strong>Дата создания:</strong> {{ task.created_at }}</p>
       <p><strong>Статус:</strong> <span class="text-green-500">Ok</span></p>
 
-      <!-- Логи задачи -->
-      <div v-if="taskLogs[task.id]?.length" class="mt-4">
-        <h2 class="text-xl font-semibold">Логи задачи</h2>
-        <ul class="list-disc pl-5">
-          <li
-            v-for="log in taskLogs[task.id]"
-            :key="log.id"
-            class="text-sm text-slate-600"
-          >
-            {{ log.message }} ({{ new Date(log.created_at).toLocaleString() }})
-          </li>
-        </ul>
-      </div>
-      <p v-else class="mt-4 text-slate-500">Логов пока нет.</p>
+      <!-- Используем компонент таблицы -->
+      <TaskLogsTable :logs="taskLogs[taskId] || []" />
     </div>
     <div v-else class="text-red-500">
       <p>Задача не найдена или произошла ошибка: {{ error }}</p>
     </div>
 
     <router-link to="/" class="mt-4 text-blue-600 hover:underline flex items-center justify-center">
-      <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-4 w-4 svg-arrow-r rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-        </svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="ml-2 h-4 w-4 svg-arrow-r rotate-180"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+      </svg>
       Назад к списку задач
     </router-link>
   </div>
 </template>
 
 <script setup>
-import IsLoading from "@/components/ui/isLoading.vue";
+import IsLoading from '@/components/ui/isLoading.vue';
+import TaskLogsTable from '@/components/layouts/task/TaskLogsTable.vue'; 
 import { onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useTaskStore } from '../../../stores/taskStore';

@@ -37,9 +37,9 @@ onMounted(() => {
     </div>
 
     <!-- Проверка записи в localStorage -->
-    <div v-if="isStoredInLocalStorage" class="text-green-500 text-center">
+    <!-- <div v-if="isStoredInLocalStorage" class="text-green-500 text-center">
       Данные успешно записаны в localStorage! 🚀
-    </div>
+    </div> -->
 
     <!-- Вывод контента на основе роутов -->
     <RouterView />
