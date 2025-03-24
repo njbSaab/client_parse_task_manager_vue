@@ -39,8 +39,10 @@ onMounted(() => {
 
 <template>
   <div class="app-container bg-white h-full">
+    <!-- Пока идет загрузка, отображаем лоадер -->
     <IsLoading v-if="isLoading" />
     
+    <!-- После загрузки показываем остальное содержимое -->
     <div v-else>
       <h1 class="text-xl font-bold text-center my-4">
         <span v-if="telegramUser">
