@@ -1,26 +1,53 @@
 <template>
     <div v-if="logs?.length" class="mt-4">
-      <h2 class="text-xl font-semibold mb-3">Логи задачи</h2>
-      <label class="mr-2 text-sm text-slate-500">Логов на странице:</label>
-      <select v-model="itemsPerPage" class="border rounded p-1 text-sm bg-white mb-3">
-        <option :value="5">5</option>
-        <option :value="10">10</option>
-        <option :value="20">20</option>
-      </select>
+      <div class="title-group flex items-center justify-between">
+        <h2 class="text-xl font-semibold mb-3">Логи задачи</h2>
+        <div class="flex items-center">
+          <label class="mr-2 text-sm text-slate-500">Логов на странице:</label>
+          <select v-model="itemsPerPage" class="border rounded p-1 text-sm bg-white mb-3">
+            <option :value="5">5</option>
+            <option :value="10">10</option>
+          </select>
+        </div>
+      </div>
   
       <!-- Таблица -->
       <div class="relative flex flex-col w-full h-full text-gray-700 bg-white shadow-md rounded-lg bg-clip-border overflow-hidden overflow-x-auto">
         <table class="w-full text-left table-auto min-w-max">
           <thead>
             <tr>
-              <th class="p-4 border-b border-slate-200 bg-slate-50">
-                <p class="text-sm font-normal leading-none text-slate-500">ID</p>
+              <th class="p-4 border-b border-slate-200 bg-slate-50 cursor-pointer" @click="sortBy('id')">
+                <div class="flex items-center">
+                  <p class="text-sm font-normal leading-none text-slate-500">ID</p>
+                  <svg
+                    class="table-sort ml-1"
+                    :class="{ 'rotate-180': sortDirection === 'desc' && sortKey === 'id' }"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                  >
+                    <path fill="currentColor" d="M9 3L5 6.99h3V14h2V6.99h3zm7 14.01V10h-2v7.01h-3L15 21l4-3.99z" />
+                  </svg>
+                </div>
               </th>
               <th class="p-4 border-b border-slate-200 bg-slate-50">
                 <p class="text-sm font-normal leading-none text-slate-500">Сообщение</p>
               </th>
-              <th class="p-4 border-b border-slate-200 bg-slate-50">
-                <p class="text-sm font-normal leading-none text-slate-500">Дата создания</p>
+              <th class="p-4 border-b border-slate-200 bg-slate-50 cursor-pointer" @click="sortBy('created_at')">
+                <div class="flex items-center">
+                  <p class="text-sm font-normal leading-none text-slate-500">Дата создания</p>
+                  <svg
+                    class="table-sort ml-1"
+                    :class="{ 'rotate-180': sortDirection === 'desc' && sortKey === 'created_at' }"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                  >
+                    <path fill="currentColor" d="M9 3L5 6.99h3V14h2V6.99h3zm7 14.01V10h-2v7.01h-3L15 21l4-3.99z" />
+                  </svg>
+                </div>
               </th>
             </tr>
           </thead>
@@ -95,11 +122,31 @@
   const currentPage = ref(1);
   const itemsPerPage = ref(5); // Количество логов на странице
   
-  const totalLogs = computed(() => props.logs.length);
+  // Логика сортировки
+  const sortKey = ref(''); // Текущий ключ сортировки ('id' или 'created_at')
+  const sortDirection = ref('asc'); // Направление сортировки ('asc' или 'desc')
+  
+  const sortedLogs = computed(() => {
+    const logsCopy = [...props.logs]; // Создаём копию массива, чтобы не изменять исходный
+    if (!sortKey.value) return logsCopy; // Если сортировка не выбрана, возвращаем исходный порядок
+  
+    return logsCopy.sort((a, b) => {
+      let valueA = sortKey.value === 'id' ? a.id : new Date(a.created_at).getTime();
+      let valueB = sortKey.value === 'id' ? b.id : new Date(b.created_at).getTime();
+  
+      if (sortDirection.value === 'asc') {
+        return valueA - valueB;
+      } else {
+        return valueB - valueA;
+      }
+    });
+  });
+  
+  const totalLogs = computed(() => sortedLogs.value.length);
   const totalPages = computed(() => Math.ceil(totalLogs.value / itemsPerPage.value));
   const startIndex = computed(() => (currentPage.value - 1) * itemsPerPage.value);
   const endIndex = computed(() => Math.min(startIndex.value + itemsPerPage.value, totalLogs.value));
-  const paginatedLogs = computed(() => props.logs.slice(startIndex.value, endIndex.value));
+  const paginatedLogs = computed(() => sortedLogs.value.slice(startIndex.value, endIndex.value));
   
   function prevPage() {
     if (currentPage.value > 1) {
@@ -116,4 +163,22 @@
   function goToPage(page) {
     currentPage.value = page;
   }
+  
+  function sortBy(key) {
+    if (sortKey.value === key) {
+      // Если уже сортируем по этому ключу, меняем направление
+      sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+    } else {
+      // Новый ключ сортировки, начинаем с 'asc'
+      sortKey.value = key;
+      sortDirection.value = 'asc';
+    }
+    currentPage.value = 1; // Сбрасываем страницу на первую при сортировке
+  }
   </script>
+  
+  <style scoped>
+  .table-sort {
+    transition: transform 0.2s ease;
+  }
+  </style>

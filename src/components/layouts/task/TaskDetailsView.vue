@@ -9,54 +9,54 @@
       }}</span>
     </h1>
 
-    <div v-if="task" class="bg-white shadow-lg rounded-lg p-6 flex flex-col items-start">
-      <p class="flex items-center justify-between">
+    <div v-if="task" class="bg-white shadow-lg rounded-lg flex flex-col items-start overflow-hidden">
+      <p class="flex items-center justify-between gap-1">
         <strong>ID:</strong>
         <span> {{ task.id }} </span>
       </p>
-      <p class="flex items-center justify-between">
+      <p class="flex items-center justify-between gap-1">
         <strong>Название:</strong>
-        <span>
+        <span class="text-nowrap w-full truncate overflow-x-auto">
           {{ task.name }}
         </span>
       </p>
-      <p class="flex items-center justify-between">
+      <p class="flex items-center justify-between gap-1">
         <strong>URL:</strong>
-        <span>
+        <span class="text-nowrap w-full truncate overflow-x-auto">
           {{ task.url }}
         </span>
       </p>
-      <p class="flex items-center justify-between">
+      <p class="flex items-center justify-between gap-1">
         <strong>Содержимое:</strong>
-        <span>
+        <span class="text-nowrap w-full truncate overflow-x-auto">
           {{ task.content }}
         </span>
       </p>
-      <p class="flex items-center justify-between">
+      <p class="flex items-center justify-between gap-1">
         <strong>Интервал:</strong>
         <span>
           {{ task.interval }}
         </span>
       </p>
-      <p class="flex items-center justify-between">
+      <p class="flex items-center justify-between gap-1">
         <strong>Частота:</strong>
         <span>
           {{ task.frequency || "Не указано" }}
         </span>
       </p>
-      <p class="flex items-center justify-between">
+      <p class="flex items-center justify-between gap-1">
         <strong>Период:</strong>
         <span>
           {{ task.period || "Не указано" }}
         </span>
       </p>
-      <p class="flex items-center justify-between">
+      <p class="flex items-center justify-between gap-1">
         <strong>Дата создания:</strong>
         <span>
           {{ task.created_at }}
         </span>
       </p>
-      <p class="flex items-center justify-between">
+      <p class="flex items-center justify-between gap-1">
         <strong>Статус:</strong> <span class="text-green-500">Ok</span>
       </p>
 
