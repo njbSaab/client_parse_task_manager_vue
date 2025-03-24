@@ -1,7 +1,7 @@
 <template>
   <IsLoading v-if="taskStore.isLoading" />
 
-  <div v-else class="container mx-auto py-4 px-2">
+  <div v-else class="container mx-auto pt-0 pb-6 px-2">
     <h1 class="text-2xl font-bold flex flex-col items-center">
       Детали задачи:
       <span class="font-normal text-gray-500 text-sm">{{
@@ -12,7 +12,7 @@
     <div v-if="task" class="bg-white shadow-lg rounded-lg flex flex-col items-start overflow-hidden my-2">
       <p class="flex items-center justify-between gap-1 px-2">
         <strong>ID:</strong>
-        <span> {{ task.id }} </span>
+        <span class="text-gray-700"> {{ task.id }} </span>
       </p>
       <p class="flex items-center justify-between gap-1 px-2">
         <strong>Название:</strong>
