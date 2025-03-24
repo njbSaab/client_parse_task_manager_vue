@@ -1,10 +1,10 @@
 <template>
-    <div v-if="logs?.length" class="mt-4">
+    <div v-if="logs?.length" class="mt-4 w-full">
       <div class="title-group flex items-center justify-between">
-        <h2 class="text-xl font-semibold mb-3">Логи задачи</h2>
+        <h2 class="text-xl font-semibold">Логи задачи</h2>
         <div class="flex items-center">
           <label class="mr-2 text-sm text-slate-500">Логов на странице:</label>
-          <select v-model="itemsPerPage" class="border rounded p-1 text-sm bg-white mb-3">
+          <select v-model="itemsPerPage" class="border rounded p-1 text-sm bg-white">
             <option :value="5">5</option>
             <option :value="10">10</option>
           </select>
